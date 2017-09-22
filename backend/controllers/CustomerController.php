@@ -39,7 +39,7 @@ class CustomerController extends Controller
         $model = new CustomerSearch();
         $searchModel = new CustomerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+
         if(Yii::$app->request->post('search')){
             $customer = Yii::$app->request->post('customer');
             $month_from = Yii::$app->request->post('month_from');
@@ -48,7 +48,8 @@ class CustomerController extends Controller
             $year_to =Yii::$app->request->post('year_to');
 
             $list_all = $model->customer_list_all($customer,$month_from,$month_to,$year_from,$year_to);
-            $list = $model->customer_list_all();
+          //  $list = $model->customer_list_all();
+            $list = $model->customer_list_daterange($month_from,$month_to,$year_from,$year_to);
              /*echo '<pre>';
 
             print_r($list_all);
@@ -74,17 +75,17 @@ class CustomerController extends Controller
             $this->actionPdf($customer,$month_from,$month_to,$year_from,$year_to);
 
         }else{
-            
-            
+
+
             $list = $model->customer_list_all();
-           
+
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
                 'list' => $list,
             ]);
         }
-            
+
     }
     public function actionPdf($customer,$month_from,$month_to,$year_from,$year_to){
 
@@ -101,7 +102,7 @@ class CustomerController extends Controller
             $pdf = $this->render('pdf', $data);
         }
 
-        
+
     }
 
     /**
