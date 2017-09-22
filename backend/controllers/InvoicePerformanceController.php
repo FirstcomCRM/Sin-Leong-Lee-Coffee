@@ -64,7 +64,8 @@ class InvoicePerformanceController extends Controller
 
 
         $model = new InvoicePerformanceSearch();
-        
+        ini_set('max_execution_time', 180);
+        ini_set("memory_limit", "512M");
 
         if(Yii::$app->request->post('search')){
             $year = Yii::$app->request->post('year');
@@ -88,14 +89,17 @@ class InvoicePerformanceController extends Controller
             $year = Yii::$app->request->post('year');
             $month =  Yii::$app->request->post('month');
             $this->actionPdf($year,$month);
-            
-            
+
+
         }else{
-                    
+
             $list = $model->performance_list();
+            $list = null;
             return $this->render('index', [
                 'list' => $list,
             ]);
+
+
         }
     }
     public function actionExcel($year,$month){
@@ -109,7 +113,7 @@ class InvoicePerformanceController extends Controller
             Yii::$app->getSession()->setFlash('error', 'Data is empty');
             return $this->redirect(['invoice-quantity/index']);
         }else{
-            
+
             return $this->render('excel', $data);
         }
 
@@ -130,10 +134,10 @@ class InvoicePerformanceController extends Controller
             $pdf = $this->render('pdf', $data);
         }
 
-        
+
     }
 
-    
+
     protected function findModel($id)
     {
         if (($model = InvoicePerformance::findOne($id)) !== null) {

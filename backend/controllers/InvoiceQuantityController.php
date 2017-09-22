@@ -91,18 +91,18 @@ class InvoiceQuantityController extends Controller
             $year = Yii::$app->request->post('year');
             $month =  Yii::$app->request->post('month');
             $this->actionPdf($year,$month);
-            
-            
-        }else{
-            
-            
-            $list = $model->quantity_list();
 
+
+        }else{
+
+
+            $list = $model->quantity_list();
+            $list = null;
             return $this->render('index', [
                 'list'=>$list,
             ]);
         }
-        
+
 
     }
     public function actionExcel($year,$month){
@@ -116,7 +116,7 @@ class InvoiceQuantityController extends Controller
             Yii::$app->getSession()->setFlash('error', 'Data is empty');
             return $this->redirect(['invoice-quantity/index']);
         }else{
-            
+
             return $this->render('excel', $data);
         }
 
@@ -138,7 +138,7 @@ class InvoiceQuantityController extends Controller
             $pdf = $this->render('pdf', $data);
         }
 
-        
+
     }
 
     protected function findModel($id)
