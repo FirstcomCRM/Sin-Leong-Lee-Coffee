@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </select>
             <select name="year" class="col-md-1 btn btn-default" id="year" required>
                 <option value="">Year</option>
-                <?php 
+                <?php
 
                    for($i = date('Y') ; $i >= 1950; $i--){
                     //echo "<option value = $i>$i</option>";
@@ -51,8 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <input type="submit" name="search" value="Search" class="btn btn-primary">
             <input type="submit" name="excel" value="Excel" class="btn btn-success">
             <input type="submit" name="pdf" value="PDF" class="btn btn-success">
-        </div>   
+        </div>
     </div>
+
+    
     <div class="box box-info">
         <div class="box-header with-border">
             <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
@@ -94,15 +96,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php
                         $item_name = "";
                         $sum = 0;
-                        foreach($list as $key => $value): 
-                            
+                        foreach($list as $key => $value):
+
                             if($item_name == ''){
                                 $item_name = $value['item_name'];
                             }
                             if($item_name != $value['item_name']){
                         ?>
                         <tr>
-                            
+
                             <td></td>
                             <td></td>
                             <td></td>
@@ -124,7 +126,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td></td>
                             <td></td>
                         </tr>
-                    <?php        
+                    <?php
                         $sum = 0;
                         $item_name = $value['item_name'];
                         }
@@ -141,7 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td><?= $value['sales_person']; ?></td>
                             <td><?= $value['customer_card_id']; ?></td>
                         </tr>
-                    <?php  
+                    <?php
                         endforeach;
                     ?>
                         <tr>
