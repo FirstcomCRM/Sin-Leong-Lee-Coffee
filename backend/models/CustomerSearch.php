@@ -77,25 +77,44 @@ class CustomerSearch extends InvoicePerformance
 
         return $dataProvider;
     }
-    
+
     public function customer_list_all($customer = null,$month_from = null,$month_to = null,$year_from = null,$year_to = null){
-        
-        $sql = "SELECT a.customer_name, YEAR(a.date) AS year, MONTH(a.date) AS month,SUM(a.amount) AS amount,SUM(a.average_cost) AS average_cost,a.customer_card_id,b.total AS expenses
+
+        $sql = "SELECT a.customer_name,a.year,a.month,SUM(a.amount) AS amount, SUM(average_cost) AS average_cost,a.customer_card_id,a.expenses
+                    FROM (SELECT a.customer_name, YEAR(a.date) AS year, MONTH(a.date) AS month,a.amount,a.quantity * a.average_cost AS average_cost ,a.customer_card_id,b.total AS expenses
                     FROM invoice_performance a
                     LEFT JOIN (SELECT MONTH , total FROM expenses) b
-                    ON MONTH(b.month) = MONTH(a.date) AND YEAR(b.month) = YEAR(a.date)";
-                    
+                    ON MONTH(b.month) = MONTH(a.date) AND YEAR(b.month) = YEAR(a.date))  a   ";
+
 
         if ($customer != null && $month_from != null && $month_to != null && $year_from != null && $year_to != null) {
 
-            $sql .= " where a.customer_name = '".$customer."' and MONTH(a.date)  BETWEEN '".$month_from."' AND '".$month_to."' and YEAR(a.date)  BETWEEN '".$year_from."' AND '".$year_to."'";
+            $sql .= " where a.customer_name = '".$customer."' and a.month  BETWEEN '".$month_from."' AND '".$month_to."' and a.year  BETWEEN '".$year_from."' AND '".$year_to."'";
         }
-
+        //and else $customer
         $sql .= " GROUP BY YEAR,MONTH,customer_name,customer_card_id";
-        
+
         return $result = Yii::$app->db->createCommand($sql)->queryAll();
     }
 
+    public function customer_list_daterange($month_from = null,$month_to = null,$year_from = null,$year_to = null){
 
+              $sql = "SELECT a.customer_name,a.year,a.month,SUM(a.amount) AS amount, SUM(average_cost) AS average_cost,a.customer_card_id,a.expenses
+                          FROM (SELECT a.customer_name, YEAR(a.date) AS year, MONTH(a.date) AS month,a.amount,a.quantity * a.average_cost AS average_cost ,a.customer_card_id,b.total AS expenses
+                          FROM invoice_performance a
+                          LEFT JOIN (SELECT MONTH , total FROM expenses) b
+                          ON MONTH(b.month) = MONTH(a.date) AND YEAR(b.month) = YEAR(a.date))  a   ";
+
+
+              if ($month_from != null && $month_to != null && $year_from != null && $year_to != null) {
+
+                  $sql .= "where a.month  BETWEEN '".$month_from."' AND '".$month_to."' and a.year  BETWEEN '".$year_from."' AND '".$year_to."'";
+              }
+              //and else $customer
+              $sql .= " GROUP BY YEAR,MONTH,customer_name,customer_card_id";
+
+              return $result = Yii::$app->db->createCommand($sql)->queryAll();
+
+    }
 
 }
