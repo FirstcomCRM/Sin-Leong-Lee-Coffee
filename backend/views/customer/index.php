@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="invoice-performance-index">
 <?php $form = ActiveForm::begin(['id' => 'customer']); ?>
-    
+
     <div class="box box-warning">
         <div class="box-header with-border">
             <h3 class="box-title">Search</h3>
@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <select name="year_from" class="col-md-1 btn btn-default" required>
                     <option value="">Year</option>
-                        <?php 
+                        <?php
 
                            for($i = date('Y') ; $i >= 1950; $i--){
                             //echo "<option value = $i>$i</option>";
@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <select name="year_to" class="col-md-1 btn btn-default" required>
                     <option value="">Year</option>
-                        <?php 
+                        <?php
 
                            for($i = date('Y') ; $i >= 1950; $i--){
                             //echo "<option value = $i>$i</option>";
@@ -105,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </select>
             </div>
             <div class="col-md-12" style="margin-top: 5px;">
-                
+
                     <input type="submit" name="search" class="btn btn-primary" value="Search">
                     <?php
                         if(isset($list_all)):
@@ -119,8 +119,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
     </div>
 
-    <?php 
+    <?php
+    $list_sale_total = 0;
+    $list_cost_total = 0;
+
+    foreach ($list as $key => $value) {
+        $list_sale_total += $value['amount'];
+        $list_cost_total += $value['average_cost'];
+
+    }
+    $total_gross_profit = $list_sale_total - $list_cost_total;
     if(isset($list_all)):
+        /*echo '<pre>';
+            print_r($list_all);
+        echo '</pre>'*/
     ?>
     <div class="box box-info">
         <div class="box-header with-border" style="text-align: center;">
@@ -129,7 +141,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="box-body">
             <?php
             if(count($list_all) > 0):
-                
+
             ?>
             <?php
                 $total_amount = 0;
@@ -141,15 +153,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     $total_amount += $value['amount'];
                     $total_expenses += $value['expenses'];
                     $total_avg += $value['average_cost'];
+
                 }
                 $total_profit = $total_amount-$total_avg;
-                $share = number_format((($total_profit/$total_expenses)*100)*100,2);
+                $share = number_format(($total_profit/$total_expenses)*100,2);
             ?>
+
+
             <div>
-                <table >
+                <table class="table table-bordered">
                     <tr>
                         <td><strong>Customer Name:</strong></td>
-                        <td align="center"><?php echo $list_all[0]['customer_name']; ?></td>
+                        <td><?php echo $list_all[0]['customer_name']; ?></td>
                     </tr>
                     <tr>
                         <td><strong>Customer Code:</strong></td>
@@ -161,11 +176,35 @@ $this->params['breadcrumbs'][] = $this->title;
                     </tr>
                     <tr>
                         <td><strong>Total Profits:</strong></td>
-                        <td><?php if($total_profit > 0 ){echo '$'.number_format($total_profit,4);}else{ echo 0;}  ?></td>
+                        <td><?php if($total_profit > 0 ){echo '$'.number_format($total_profit,2);}else{ echo 0;}  ?></td>
                     </tr>
                     <tr>
                         <td><strong>Share Cost(%):</strong></td>
                         <td><?php if($share > 0 ){echo $share.'%' ;}else{ echo 0;} ?></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Total Gross Profit:</strong></td>
+                        <td><?php echo '$'.number_format($total_gross_profit,2); ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gross Profit Ratio:</strong></td>
+                        <?php  $indirect_percent = ($total_profit/$total_gross_profit)*100; ?>
+                        <td><?php echo number_format($indirect_percent,2).'%'; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Indirect Expenses:</strong></td>
+                        <?php $indirect = ($indirect_percent / 100)*$total_expenses ?>
+                        <td><?php echo '$'.number_format(($indirect_percent / 100) * $total_expenses,2); ?></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Customer Indirect Expenses:</strong></td>
+                      <td>
+                        <?php
+                          $ind = $indirect * 0.10;
+                          echo '$'.number_format($ind,2);
+                        ?>
+                      </td>
                     </tr>
                 </table>
             </div>
@@ -195,28 +234,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     ?>
                         <tr>
                             <td><?php echo date_format(date_create($value['year'].'-'.$value['month']),"M"); ?></td>
-                        
+
                             <td><?php echo '$'.number_format($value['amount'],2); ?></td>
-                        
-                            <td><?php echo '$'.number_format($value['average_cost'],4); ?></td>
+
+                            <td><?php echo '$'.number_format($value['average_cost'],2); ?></td>
                             <?php $profits = $value['amount']-$value['average_cost']; ?>
-                            <td><?php   if($profits > 0 ){ 
-                                            echo '$'.number_format($profits,4); 
-                                        }else{ 
+                            <td><?php   if($profits > 0 ){
+                                            echo '$'.number_format($profits,2);
+                                        }else{
                                             echo 0;
                                         } ?>
-                                        
+
                             </td>
-                        
-                            <td><?php   if((($profits/$value['expenses'])*100)*100 > 0){
-                                                echo number_format((($profits/$value['expenses'])*100)*100,2).'%';
+
+                            <td><?php   if(($profits/$value['amount'])*100 > 0){
+                                                echo number_format(($profits/$value['amount'])*100,2).'%';
                                             }else{
                                                 echo 0;
                                             }  ?>
                             </td>
                         </tr>
 
-                    <?php    
+                    <?php
 
                         $grand_total_amount += $value['amount'];
                         $grand_expenses += $value['expenses'];
@@ -226,14 +265,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     ?>
                         <tr>
                             <td>Summary</td>
-                        
+
                             <td><?php echo '$'.number_format($grand_total_amount,2); ?></td>
-                        
-                            <td><?php echo '$'.number_format($grand_avg,4); ?></td>
-                        
-                            <td><?php if($grand_profits > 0){ echo '$'.number_format($grand_profits,4); }else{ echo 0; }  ?></td>
-                        
-                            <td><?php if((($grand_profits/$grand_expenses)*100)*100 > 0){ echo  number_format((($grand_profits/$grand_expenses)*100)*100,2).'%'; }else{ echo 0; }  ?></td>
+
+                            <td><?php echo '$'.number_format($grand_avg,2); ?></td>
+
+                            <td><?php if($grand_profits > 0){ echo '$'.number_format($grand_profits,2); }else{ echo 0; }  ?></td>
+
+                            <td><?php if(($grand_profits/$grand_expenses)*100 > 0){ echo  number_format(($grand_profits/$grand_total_amount)*100,2).'%'; }else{ echo 0; }  ?></td>
                         </tr>
                     </tbody>
                 </table>
