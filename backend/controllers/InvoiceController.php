@@ -48,7 +48,7 @@ class InvoiceController extends Controller
                     ],
                 ],
             ];
-            
+
         }else{
 
             return [
@@ -102,7 +102,8 @@ class InvoiceController extends Controller
     public function actionCreate()
     {
         $model = new Invoice();
-
+        ini_set('max_execution_time', 300);
+        ini_set("memory_limit", "512M");
 
         if ($model->load(Yii::$app->request->post())) {
             $year =  Yii::$app->request->post('year');
@@ -124,7 +125,7 @@ class InvoiceController extends Controller
                 $this->ImportExcel($filename,$year,$month);
 
             }
-            
+
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -148,7 +149,7 @@ class InvoiceController extends Controller
         if($invoice->save())
         {
                 // than you can get id just like that
-                
+
                 $this->invoice_id = $invoice->id; // this is inserted item id
 
         }
@@ -168,25 +169,25 @@ class InvoiceController extends Controller
 
             $invoice_name = new InvoiceQuantity();
             $invoice_customer = new InvoicePerformance();
-            
-            
+
+
             if(!empty($rowData[0][1]) && !empty($rowData[0][2]) && empty($rowData[0][3]) && empty($rowData[0][4]) && empty($rowData[0][5]) && empty($rowData[0][6]) && empty($rowData[0][7]) && empty($rowData[0][8]) && empty($rowData[0][9]) && empty($rowData[0][10])){
 
-                $invoice_name->item_code = (string)$rowData[0][1]; 
+                $invoice_name->item_code = (string)$rowData[0][1];
                 $invoice_name->item_name = (string)$rowData[0][2];
-                $invoice_name->invoice_id = $this->invoice_id; 
+                $invoice_name->invoice_id = $this->invoice_id;
                 $this->item_code = (string)$rowData[0][1];
 
                 if($invoice_name->save())
                 {
-                        
+
                     $this->invoice_name_id = $invoice_name->id; // this is inserted item id
 
                 }
 
-                
 
-            }else if((!empty($rowData[0][1]) && !empty($rowData[0][2]) && !empty($rowData[0][3])   && !empty($rowData[0][6]) && !empty($rowData[0][7]) && !empty($rowData[0][8]) && !empty($rowData[0][9]) && !empty($rowData[0][10])) || 
+
+            }else if((!empty($rowData[0][1]) && !empty($rowData[0][2]) && !empty($rowData[0][3])   && !empty($rowData[0][6]) && !empty($rowData[0][7]) && !empty($rowData[0][8]) && !empty($rowData[0][9]) && !empty($rowData[0][10])) ||
 
 
                 (!empty($rowData[0][1]) && !empty($rowData[0][2]) && !empty($rowData[0][3])   && !empty($rowData[0][6]) && !empty($rowData[0][7]) && !empty($rowData[0][8]) && empty($rowData[0][9]) && !empty($rowData[0][10])))
@@ -194,19 +195,19 @@ class InvoiceController extends Controller
 
 
                 $invoice_customer->customer_name  = (string)$rowData[0][1];
-                $invoice_customer->invoice_no  = (string)$rowData[0][2]; 
+                $invoice_customer->invoice_no  = (string)$rowData[0][2];
                 $date = (string)$rowData[0][3];
                 $date_x = explode("/", $date);
                 $yr = $date_x[2];
                 $month = $date_x[1];
                 $day = $date_x[0];
                 $new_date =  $yr."-".$month."-".$day;
-                $invoice_customer->date  = $new_date; 
+                $invoice_customer->date  = $new_date;
 
-                $invoice_customer->quantity  = (float)$rowData[0][4]; 
+                $invoice_customer->quantity  = (float)$rowData[0][4];
                 $invoice_customer->amount  = (float)$rowData[0][5];
                 preg_match('/([0-9]+\.[0-9]+)/', $rowData[0][7], $matches);
-                
+
                 $invoice_customer->average_cost  = (string)$matches[0];
                 $invoice_customer->job_no  = (string)$rowData[0][8];
                 $invoice_customer->sales_person  = (string)$rowData[0][9];
@@ -216,9 +217,9 @@ class InvoiceController extends Controller
 
 
                 $invoice_customer->save();
-                
+
             }else if (empty($rowData[0][1]) && empty($rowData[0][2]) && !empty($rowData[0][3]) && empty($rowData[0][6]) && empty($rowData[0][7]) && empty($rowData[0][8]) && empty($rowData[0][9]) && empty($rowData[0][10])) {
-                
+
                 $new_invoice_name = InvoiceQuantity::findOne($this->invoice_name_id);
                 $new_invoice_name->total_quantity = (float)$rowData[0][4];
                 $new_invoice_name->total_amount = (float)$rowData[0][5];
@@ -229,15 +230,15 @@ class InvoiceController extends Controller
             }
 
         }
-        
+
         $new_invoice = Invoice::findOne($this->invoice_id);
         $new_invoice->total = $this->grand_total;
-        
+
         if($new_invoice->save()){
             Yii::$app->getSession()->setFlash('success', 'Import Successfully');
             Yii::$app->response->redirect(['invoice/index']);
         }
-        
+
     }
 
     /**
