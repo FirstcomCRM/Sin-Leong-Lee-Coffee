@@ -1,0 +1,8 @@
+yes
+example : year start I choose 2010  year end I choose 2018
+then system need automatic generate the table
+
+Begin    $1000    $1000
+2010     $150(cost price)    $850($1000-$150)
+2011     $150(cost price)    $600($850-$150)
+can understand?
