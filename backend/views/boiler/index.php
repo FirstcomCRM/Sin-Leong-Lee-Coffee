@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
           <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
         <p>
             <?= Html::a('Create Boiler', ['create'], ['class' => 'btn btn-success']) ?>
+            <?= Html::a('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Truncate Boiler Tables', ['truncate'], ['class' => 'btn btn-danger']) ?>
         </p>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,

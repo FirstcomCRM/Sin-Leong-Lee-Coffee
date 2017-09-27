@@ -68,30 +68,60 @@ $year = array_combine($year_a,$year_b);
         </div>
       </div>
 
+      <hr>
+
+
+      <div class="row">
+        <div class="col-md-3">
+          <?= $form->field($model_sum, 'purchase_cost')->textInput(['maxlength' => true, 'readOnly'=>true, 'id'=>'purchase-cost-a']) ?>
+        </div>
+        <div class="col-md-3">
+          <?php echo $form->field($model_sum, 'year_from')->dropDownList($year,['prompt'=>'Year From', 'id'=>'year_from', 'onchange'=>'getYear()',]) ?>
+
+        </div>
+        <div class="col-md-3">
+          <?php echo $form->field($model_sum, 'year_to')->dropDownList($year,['prompt'=>'Year to','id'=>'year_to','onchange'=>'getYear()']) ?>
+
+        </div>
+      </div>
+
+      <div class="solution">
+        <table id ="depreciate" class="table table-bordered">
+          <thead>
+            <th>Year</th>
+            <th>Depreciation Amount</th>
+            <th>Depreciation Expense</th>
+          </thead>
+            <tbody>
+              <?php if ($model->isNewRecord): ?>
+
+              <?php else: ?>
+
+
+                <?php foreach ($model_line as $key => $value): ?>
+                  <tr>
+                    <td><?php echo $form->field($value, 'years')->textInput(['maxlength'=>true, 'name'=>'year_list[]'])->label(false) ?></td>
+                    <td><?php echo $form->field($value, 'dep_amount')->textInput(['maxlength'=>true, 'name'=>'dep_value[]'])->label(false) ?></td>
+                    <td><?php echo $form->field($value, 'dep_expense')->textInput(['maxlength'=>true, 'name'=>'dep_expense[]'])->label(false) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+
+
+              <?php endif; ?>
+            </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+            <?= $form->field($model_sum, 'total_dep_year')->textInput(['maxlength' => true,'id'=>'total_dep_year']) ?>
+            <?= $form->field($model_sum, 'total_dep_amount')->textInput(['maxlength' => true,'id'=>'total_dep_amount']) ?>
+            <?= $form->field($model_sum, 'balance')->textInput(['maxlength' => true,'id'=>'balance']) ?>
+        </div>
+      </div>
+
     <?php ActiveForm::end(); ?>
   <hr>
-  <div class="row">
-    <div class="col-md-3">
-      <label for="">Year from</label>
-      <?= Html::dropDownList('year_from', 4 ,$year, ['prompt'=>'Select Year','id'=>'year_from', 'onchange'=>'getYear()', 'class'=>'form-control']) ?>
-    </div>
-    <div class="col-md-3">
-      <label for="">Year To</label>
-      <?= Html::dropDownList('year_to', 4 ,$year,['prompt'=>'Select Year', 'id'=>'year_to','onchange'=>'getYear()','class'=>'form-control']) ?>
-    </div>
-  </div>
 
 <br>
-  <div class="solution">
-    <table id ="depreciate" class="table table-bordered">
-      <thead>
-        <th>Year</th>
-        <th>Depreciation Amount</th>
-        <th>Depreciation Expense</th>
-      </thead>
-        <tbody>
 
-        </tbody>
-    </table>
-  </div>
 </div>
