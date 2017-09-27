@@ -48,9 +48,9 @@ $year = array_combine($year_a,$year_b);
             ]); ?>
         </div>
         <div class="col-md-4">
-            <?= $form->field($model, 'pur_cost')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'pur_cost')->textInput(['maxlength' => true, 'id'=>'purchase-cost', 'onchange'=>'getYear()']) ?>
 
-            <?= $form->field($model, 'cost')->textInput(['maxlength' => true,'onchange'=>'getDepn(), getNbv()','id'=>'cost-id']) ?>
+            <?= $form->field($model, 'cost')->textInput(['maxlength' => true,'onchange'=>'getDepn(), getNbv(), getYear()','id'=>'cost-id']) ?>
 
             <?= $form->field($model, 'acc_depn')->textInput(['maxlength' => true, 'onchange'=>'getNbv()','id'=>'acc-depn-id']) ?>
         </div>
@@ -69,5 +69,29 @@ $year = array_combine($year_a,$year_b);
       </div>
 
     <?php ActiveForm::end(); ?>
+  <hr>
+  <div class="row">
+    <div class="col-md-3">
+      <label for="">Year from</label>
+      <?= Html::dropDownList('year_from', 4 ,$year, ['prompt'=>'Select Year','id'=>'year_from', 'onchange'=>'getYear()', 'class'=>'form-control']) ?>
+    </div>
+    <div class="col-md-3">
+      <label for="">Year To</label>
+      <?= Html::dropDownList('year_to', 4 ,$year,['prompt'=>'Select Year', 'id'=>'year_to','onchange'=>'getYear()','class'=>'form-control']) ?>
+    </div>
+  </div>
 
+<br>
+  <div class="solution">
+    <table id ="depreciate" class="table table-bordered">
+      <thead>
+        <th>Year</th>
+        <th>Depreciation Amount</th>
+        <th>Depreciation Expense</th>
+      </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+  </div>
 </div>
