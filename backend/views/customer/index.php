@@ -163,42 +163,42 @@ $this->params['breadcrumbs'][] = $this->title;
             <div>
                 <table class="table table-bordered">
                     <tr>
-                        <td><strong>Customer Name:</strong></td>
+                        <td class="report-left"><strong>Customer Name:</strong></td>
                         <td><?php echo $list_all[0]['customer_name']; ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Customer Code:</strong></td>
+                        <td class="report-left"><strong>Customer Code:</strong></td>
                         <td><?php echo $list_all[0]['customer_card_id']; ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Total Expenses:</strong></td>
+                        <td class="report-left"><strong>Total Expenses: </strong> (Summation of Monthly Expenses)</td>
                         <td><?php echo '$'.number_format($total_expenses,2); ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Total Profits:</strong></td>
+                        <td class="report-left"><strong>Total Profits:</strong> (Customer Total Amount -  Customer Total Avearge)</td>
                         <td><?php if($total_profit > 0 ){echo '$'.number_format($total_profit,2);}else{ echo 0;}  ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Share Cost(%):</strong></td>
+                        <td class="report-left"><strong>Share Cost(%)</strong> ((Customer Total-Profit/Total-Expenses)*100):</td>
                         <td><?php if($share > 0 ){echo $share.'%' ;}else{ echo 0;} ?></td>
                     </tr>
 
                     <tr>
-                        <td><strong>Total Gross Profit:</strong></td>
+                        <td class="report-left"><strong>Total Gross Profit:</strong> (Monthly Total Amount - Monthly Average Cost)</td>
                         <td><?php echo '$'.number_format($total_gross_profit,2); ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Gross Profit Ratio:</strong></td>
+                        <td class="report-left"><strong>Gross Profit Ratio:</strong> ((Customer Total-Profit/Total Gross Profit)*100)</td>
                         <?php  $indirect_percent = ($total_profit/$total_gross_profit)*100; ?>
                         <td><?php echo number_format($indirect_percent,2).'%'; ?></td>
                     </tr>
                     <tr>
-                        <td><strong>Total Indirect Expenses:</strong></td>
+                        <td class="report-left"><strong>Total Indirect Expenses:</strong> ((Gross Profit Ratio/100)*Total Expenses)</td>
                         <?php $indirect = ($indirect_percent / 100)*$total_expenses ?>
                         <td><?php echo '$'.number_format(($indirect_percent / 100) * $total_expenses,2); ?></td>
                     </tr>
                     <tr>
-                      <td><strong>Customer Indirect Expenses:</strong></td>
+                      <td class="report-left"><strong>Customer Indirect Expenses:</strong> (Total Indirect Expenses*0.10)</td>
                       <td>
                         <?php
                           $ind = $indirect * 0.10;
