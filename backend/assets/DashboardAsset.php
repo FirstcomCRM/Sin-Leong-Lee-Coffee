@@ -42,6 +42,7 @@ class DashboardAsset extends AssetBundle
         'bower_components/fastclick/lib/fastclick.js',
         'dist/js/adminlte.min.js',
         //'dist/js/pages/dashboard.js',
+    //    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/en-ca.js',
         'dist/js/demo.js',
         'bower_components/select2/dist/js/select2.full.min.js',
         'js/boiler.js',
