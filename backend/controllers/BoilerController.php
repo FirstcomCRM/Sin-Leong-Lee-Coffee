@@ -56,15 +56,17 @@ class BoilerController extends Controller
      */
     public function actionView($id)
     {
-        $model_sum = BoilerSum::findOne($id);
-        $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
-    //    echo '<pre>';
-    //    print_r($model_line);
-    //    echo '</pre>';
+
+        $model_sum = BoilerSum::find()->where(['boiler_id'=>$id])->one();
+      //  $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
+    ////    echo '<pre>';
+      //  print_r($model_sum);
+        //echo '</pre>';
+        // /die(0);
         return $this->render('view', [
             'model' => $this->findModel($id),
             'model_sum'=>$model_sum,
-            'model_line'=>$model_line,
+          //  'model_line'=>$model_line,
         ]);
     }
 
@@ -78,32 +80,22 @@ class BoilerController extends Controller
         $customer = ArrayHelper::map(InvoicePerformance::find()->select('customer_name')->orderBy(['customer_name'=>SORT_ASC])->distinct()->all(), 'customer_name', 'customer_name');
         $model = new Boiler();
         $model_sum =new BoilerSum();
-
+        $model_line = new BoilerLine();
+        $model->purchase_date = date('Y-m-d');
 
         if ($model->load(Yii::$app->request->post())  && $model->save() ) {
-
-            $model_sum->load(Yii::$app->request->post());
-            $model_sum->boiler_id = $model->id;
-            $model_sum->save(false);
-            $years = Yii::$app->request->post('year_list');
-            $dep_value = Yii::$app->request->post('dep_value');
-            $dep_exp = Yii::$app->request->post('dep_expense');
-            $counts = count($years);
-            for ($i=0; $i < $counts ; $i++) {
-                 $model_line = new BoilerLine();
-                 $model_line->boiler_id = $model->id;
-                 $model_line->years = $years[$i];
-                 $model_line->dep_amount = $dep_value[$i];
-                 $model_line->dep_expense = $dep_exp[$i];
-                 $model_line->save(false);
-            }
-
+          //if($model->asset_type == 1){
+            $this->saveBoiler($model_sum,$model_line,$model);
+        //  }
+            Yii::$app->session->setFlash('success', "Boiler Created!");
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            //print_r($model->getErrors());
             return $this->render('create', [
                 'model' => $model,
                 'customer' => $customer,
                 'model_sum'=>$model_sum,
+                'model_line'=>$model_line,
             ]);
         }
     }
@@ -118,25 +110,17 @@ class BoilerController extends Controller
     {
         $customer = ArrayHelper::map(InvoicePerformance::find()->select('customer_name')->orderBy(['customer_name'=>SORT_ASC])->distinct()->all(), 'customer_name', 'customer_name');
         $model = $this->findModel($id);
-        $model_sum = BoilerSum::findOne($id);
+        $model_sum = BoilerSum::find()->where(['boiler_id'=>$id])->one();
         $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
 
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model_sum->load(Yii::$app->request->post());
-            $model_sum->save(false);
-            $years = Yii::$app->request->post('year_list');
-            $dep_value = Yii::$app->request->post('dep_value');
-            $dep_exp = Yii::$app->request->post('dep_expense');
-            $counts = count($years);
+
             Yii::$app->db->createCommand()->delete('boiler_line', ['boiler_id' => $id])->execute();
-            for ($i=0; $i < $counts ; $i++) {
-                 $model_line = new BoilerLine();
-                 $model_line->boiler_id = $model->id;
-                 $model_line->years = $years[$i];
-                 $model_line->dep_amount = $dep_value[$i];
-                 $model_line->dep_expense = $dep_exp[$i];
-                 $model_line->save(false);
-            }
+            $this->saveBoiler($model_sum,$model_line,$model);
+
+
+            Yii::$app->session->setFlash('success', "Boiler Updated!");
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -175,6 +159,28 @@ class BoilerController extends Controller
      * @return Boiler the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+
+     protected function saveBoiler($model_sum,$model_line,$model){
+         $model_sum->load(Yii::$app->request->post());
+         $model_sum->boiler_id = $model->id;
+         $model_sum->customer_name = $model->customer_name;
+         $model_sum->purchase_date = $model->purchase_date;
+         $model_sum->save(false);
+         $years = Yii::$app->request->post('year_list');
+         $dep_value = Yii::$app->request->post('dep_value');
+         $dep_exp = Yii::$app->request->post('dep_expense');
+         $counts = count($years);
+         for ($i=0; $i < $counts ; $i++) {
+              $model_line = new BoilerLine();
+              $model_line->boiler_id = $model->id;
+              $model_line->date_from = $years[$i];
+              $model_line->dep_amount = $dep_value[$i];
+              $model_line->dep_expense = $dep_exp[$i];
+              $model_line->customer_name = $model->customer_name;
+              $model_line->save(false);
+         }
+     }
+
     protected function findModel($id)
     {
         if (($model = Boiler::findOne($id)) !== null) {

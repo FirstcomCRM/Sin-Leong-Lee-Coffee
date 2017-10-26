@@ -49,6 +49,7 @@ class CustomerController extends Controller
 
             $list_all = $model->customer_list_all($customer,$month_from,$month_to,$year_from,$year_to);
           //  $list = $model->customer_list_all();
+    //        var_dump($list_all);die();
             $list = $model->customer_list_daterange($month_from,$month_to,$year_from,$year_to);
              /*echo '<pre>';
 

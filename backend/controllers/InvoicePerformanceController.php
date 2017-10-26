@@ -61,13 +61,35 @@ class InvoicePerformanceController extends Controller
      */
     public function actionIndex()
     {
-
-
-        $model = new InvoicePerformanceSearch();
         ini_set('max_execution_time', 180);
         ini_set("memory_limit", "512M");
 
-        if(Yii::$app->request->post('search')){
+
+        $searchModel = new InvoicePerformanceSearch();
+        $date_to = '';
+        $date_from='';
+
+        if (Yii::$app->request->post()) {
+          $searchModel->perform_list(Yii::$app->request->post());
+          $ym_from = $searchModel->month_from.'-'.$searchModel->year_from;
+          $ym_to = $searchModel->month_to.'-'.$searchModel->year_to;
+          $date_from = date('Y-m-01', strtotime($ym_from));
+          $date_to = date('Y-m-t', strtotime($ym_to));
+      //    die();
+          $this->layout='reports.php';
+          return $this->render('report', [
+              'searchModel'=> $searchModel,
+              'date_to'=>$date_to,
+              'date_from'=>$date_from
+          ]);
+        }else{
+          return $this->render('index', [
+              'searchModel'=> $searchModel,
+              'date_to'=>$date_to,
+              'date_from'=>$date_from
+          ]);
+        }
+      /*  if(Yii::$app->request->post('search')){
             $year = Yii::$app->request->post('year');
             $month =  Yii::$app->request->post('month');
             $list = $model->performance_list($month,$year);
@@ -97,10 +119,11 @@ class InvoicePerformanceController extends Controller
             $list = null;
             return $this->render('index', [
                 'list' => $list,
+                'model'=>$model,
             ]);
 
 
-        }
+        }*/
     }
     public function actionExcel($year,$month){
 
@@ -136,6 +159,7 @@ class InvoicePerformanceController extends Controller
 
 
     }
+
 
 
     protected function findModel($id)

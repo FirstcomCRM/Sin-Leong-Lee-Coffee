@@ -6,11 +6,14 @@ use Yii;
 use mPDF;
 use backend\models\InvoiceQuantity;
 use backend\models\InvoiceQuantitySearch;
+use backend\models\InvoicePerformance;
+use backend\models\InvoicePerformanceSearch;
+use backend\models\ItemList;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
+use yii\data\Pagination;
 /**
  * InvoiceQuantityController implements the CRUD actions for InvoiceQuantity model.
  */
@@ -63,9 +66,59 @@ class InvoiceQuantityController extends Controller
     public function actionIndex()
     {
 
+        $searchModel = new InvoicePerformanceSearch();
+        ini_set('max_execution_time', 300);
+        ini_set("memory_limit", "512M");
 
 
-        $model = new InvoiceQuantitySearch();
+      //  $dataProvider = $searchModel->quantity_list(Yii::$app->request->post());
+        $custFileDistinct =$searchModel->quantity_list((Yii::$app->request->queryParams));
+      //  $searchModel->load((Yii::$app->request->queryParams));
+      //  print_r($searchModel->month_from);die();
+        $ym_from = $searchModel->month_from.'-'.$searchModel->year_from;
+        $ym_to = $searchModel->month_to.'-'.$searchModel->year_to;
+        $date_from = date('Y-m-01', strtotime($ym_from));
+        $date_to = date('Y-m-t', strtotime($ym_to));
+
+
+      /*  $count = InvoicePerformance::find()->select(['customer_name'])->distinct()
+                      ->andFilterWhere(['between','date',$date_from,$date_to])
+                      ->andFilterWhere(['like', 'customer_name', $searchModel->customer_name])
+                     ->andFilterWhere(['like', 'item_code',$searchModel->item_code])
+                     ->count();
+
+         $pagination = new Pagination([
+            'defaultPageSize' => 10,
+            'totalCount' => $count
+        ]);
+
+        $custFileDistinct = InvoicePerformance::find()->select(['customer_name'])->distinct()
+                      ->orderBy(['customer_name'=>SORT_ASC])
+                      ->andFilterWhere(['between','date',$date_from,$date_to])
+                      ->andFilterWhere(['like', 'customer_name', $searchModel->customer_name])
+                     ->andFilterWhere(['like', 'item_code',$searchModel->item_code])
+                     ->andFilterWhere(['like', 'item_name',$searchModel->item_name])
+                      ->offset($pagination->offset)
+                      ->limit($pagination->limit)
+                     ->all();*/
+
+        /*$pagination = new Pagination([
+          'defaultPageSize'=>10,
+          'totalCount'=> count($custFileDistinct)
+        ]);*/
+
+
+        return $this->render('index', [
+            'searchModel'=> $searchModel,
+            'custFileDistinct'=>$custFileDistinct,
+            'date_from'=>$date_from,
+            'date_to'=>$date_to,
+          //  'pagination'=>$pagination
+        ]);
+
+
+
+/*        $model = new InvoiceQuantitySearch();
 
 
         if(Yii::$app->request->post('search')){
@@ -101,7 +154,7 @@ class InvoiceQuantityController extends Controller
             return $this->render('index', [
                 'list'=>$list,
             ]);
-        }
+        }*/
 
 
     }

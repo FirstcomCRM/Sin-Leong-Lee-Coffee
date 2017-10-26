@@ -108,7 +108,13 @@ class InvoiceController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $year =  Yii::$app->request->post('year');
             $month =  Yii::$app->request->post('month');
+          //  $ym = $month.'-'.$year;
+        //    $model->date_uploaded = date('Y-m-01', strtotime($ym));
+        //    $model->save(false);
+        //    print_r($date_data);
+          //  die();
             $model->file = UploadedFile::getInstance($model,'file');
+
 
 
             if($model->file == null){
@@ -125,6 +131,8 @@ class InvoiceController extends Controller
                 $this->ImportExcel($filename,$year,$month);
 
             }
+
+
 
         } else {
             return $this->render('create', [
@@ -145,7 +153,10 @@ class InvoiceController extends Controller
         }
 
         $invoice = new Invoice();
-        $invoice->month = $month.' - '.$year;;
+        $invoice->month = $month.' - '.$year;
+        $ym = $month.'-'.$year;
+        $invoice->date_uploaded = date('Y-m-01', strtotime($ym));
+        $date_uploaded = date('Y-m-01', strtotime($ym));
         if($invoice->save())
         {
                 // than you can get id just like that
@@ -157,7 +168,9 @@ class InvoiceController extends Controller
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
-
+        $item_code = null;
+        $item_name = null;
+        $item_abbr = null;
         for($row=10; $row <= $highestRow; $row++)
         {
             $rowData = $sheet->rangeToArray('A'.$row.':'.$highestColumn.$row,NULL,TRUE,FALSE);
@@ -175,6 +188,9 @@ class InvoiceController extends Controller
 
                 $invoice_name->item_code = (string)$rowData[0][1];
                 $invoice_name->item_name = (string)$rowData[0][2];
+                $item_code = (string)$rowData[0][1];
+                $item_name = (string)$rowData[0][2];
+                $item_abbr = substr($item_code, 0, 1);
                 $invoice_name->invoice_id = $this->invoice_id;
                 $this->item_code = (string)$rowData[0][1];
 
@@ -214,7 +230,9 @@ class InvoiceController extends Controller
                 $invoice_customer->customer_card_id = (string)$rowData[0][10];
                 $invoice_customer->invoice_item_code = $this->item_code;
                 $invoice_customer->invoice_id = $this->invoice_id;
-
+                $invoice_customer->item_code = $item_code;
+                $invoice_customer->item_name = $item_name;
+                $invoice_customer->item_abbr = $item_abbr;
 
                 $invoice_customer->save();
 
@@ -262,6 +280,13 @@ class InvoiceController extends Controller
 
         Yii::$app->getSession()->setFlash('success', 'Delete Successfully');
 
+        return $this->redirect(['index']);
+    }
+
+    public function actionTruncate(){
+        Yii::$app->db->createCommand()->truncateTable('invoice')->execute();
+        Yii::$app->db->createCommand()->truncateTable('invoice_performance')->execute();
+        Yii::$app->db->createCommand()->truncateTable('invoice_quantity')->execute();
         return $this->redirect(['index']);
     }
 
