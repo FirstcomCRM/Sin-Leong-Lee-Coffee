@@ -18,7 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="box-body">
             <p>
                 <?= Html::a('Create Invoice', ['create'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a('<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Truncate Invoice Tables', ['truncate'], ['class' => 'btn btn-danger']) ?>
             </p>
+
+
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 //'filterModel' => $searchModel,

@@ -12,19 +12,10 @@ $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="boiler-update">
 
-    <div class="box box-info">
-      <div class="box-header with-border">
-        <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
-      </div>
-      <div class="box-body">
-        <?= $this->render('_form', [
-            'model' => $model,
-            'model_sum'=>$model_sum,
-            'model_line'=>$model_line,
-            'customer'=>$customer
-        ]) ?>
-      </div>
-    </div>
-
-
+    <?= $this->render('_form', [
+        'model' => $model,
+        'model_sum'=>$model_sum,
+        'model_line'=>$model_line,
+        'customer'=>$customer
+    ]) ?>
 </div>

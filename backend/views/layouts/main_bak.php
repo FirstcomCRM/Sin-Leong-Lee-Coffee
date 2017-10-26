@@ -134,45 +134,6 @@ DashboardAsset::register($this);
             <li><a href="<?php echo Url::to(['permission/index']);?>"><i class="fa fa-circle-o"></i> Permission</a></li>
           </ul>
         </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-file" aria-hidden="true"></i>
-            <span>Lists</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?php echo Url::to(['account-list/index']);?>"><i class="fa fa-circle-o"></i> Account List</a></li>
-            <li><a href="<?php echo Url::to(['item-list/index']);?>"><i class="fa fa-circle-o"></i> Item List</a></li>
-            <li><a href="<?php echo Url::to(['asset-type/index']);?>"><i class="fa fa-circle-o"></i> Asset List</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-bar-chart" aria-hidden="true"></i>
-            <span>Charts</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?php echo Url::to(['charts/index']);?>"><i class="fa fa-circle-o"></i>Performance Chart</a></li>
-            <li><a href="<?php echo Url::to(['charts/qty-index']);?>"><i class="fa fa-circle-o"></i>Quantity Chart</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-money" aria-hidden="true"></i>
-            <span>Expenses</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="<?php echo Url::to(['direct-expense/index']);?>"><i class="fa fa-circle-o"></i>Direct Expenses</a></li>
-          </ul>
-        </li>
         <!-- <li>
           <a href="pages/widgets.html">
             <i class="fa fa-th"></i> <span>Widgets</span>
@@ -190,7 +151,7 @@ DashboardAsset::register($this);
             </span>
           </a>
           <ul class="treeview-menu">
-            <!---<li class="treeview"> EDR remove logs
+            <li class="treeview">
               <a href="#"><i class="fa fa-circle-o"></i>Log
                 <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
@@ -200,12 +161,12 @@ DashboardAsset::register($this);
                 <li><a href="<?php echo Url::to(['log-user/index']);?>"><i class="fa fa-circle-o"></i>log User</a></li>
                 <li><a href="<?php echo Url::to(['log-event/index']);?>"><i class="fa fa-circle-o"></i>log Event</a></li>
               </ul>
-            </li>--->
+            </li>
             <li><a href="<?php echo Url::to(['invoice-quantity/index']);?>"><i class="fa fa-circle-o"></i> Customer Quantity</a></li>
             <li><a href="<?php echo Url::to(['invoice-performance/index']);?>"><i class="fa fa-circle-o"></i> Customer Performance</a></li>
             <li><a href="<?php echo Url::to(['customer/index']);?>"><i class="fa fa-circle-o"></i> Customer</a></li>
             <li><a href="<?php echo Url::to(['boiler/index']);?>"><i class="fa fa-circle-o"></i> Boiler</a></li>
-            <!--- <li><a href="<?php echo Url::to(['gii/default']);?>"><i class="fa fa-cog" aria-hidden="true"></i></i> Gii</a></li>--->
+            <li><a href="<?php echo Url::to(['gii/default']);?>"><i class="fa fa-cog" aria-hidden="true"></i></i> Gii</a></li>
           </ul>
         </li>
       </ul>

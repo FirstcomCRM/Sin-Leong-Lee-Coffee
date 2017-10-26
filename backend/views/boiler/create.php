@@ -12,17 +12,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="boiler-create">
 
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title"><?= Html::encode($this->title) ?></h3>
-        </div>
-        <div class="box-body">
-		    <?= $this->render('_form', [
-		        'model' => $model,
-		        'customer' => $customer,
-            'model_sum'=>$model_sum,
-		    ]) ?>
-		</div>
-	</div>
+		 <?= $this->render('_form', [
+		      'model' => $model,
+		      'customer' => $customer,
+          'model_sum'=>$model_sum,
+					'model_line'=>$model_line,
+    ]) ?>
+
 
 </div>

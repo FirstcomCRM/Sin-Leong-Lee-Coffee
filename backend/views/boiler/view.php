@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use common\components\Retrieve;
+use backend\models\AssetType;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Boiler */
 
@@ -32,101 +33,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'model' => $model,
                 'attributes' => [
                   //  'id',
-                    'customer',
-                    'bolter_no',
-                    'invoice_no',
-                    'pur_date',
-                    [
-                      'attribute'=>'pur_cost',
+                    'customer_name',
+                  /*  [
+                      'attribute'=>'asset_type',
                       'value'=>function($model){
-                        return Retrieve::retrieveFormat($model->pur_cost);
-                      }
-                    ],
-
+                        return Retrieve::retrieveAsset($model->asset_type);
+                      },
+                    ],*/
+                    'purchase_date',
                     [
-                      'attribute'=>'cost',
+                      'attribute'=>'amount',
                       'value'=>function($model){
-                        return Retrieve::retrieveFormat($model->cost);
-                      }
-                    ],
-
-                    [
-                      'attribute'=>'acc_depn',
-                      'value'=>function($model){
-                        return Retrieve::retrieveFormat($model->acc_depn);
-                      }
-                    ],
-                    'year',
-
-                    [
-                      'attribute'=>'depn',
-                      'value'=>function($model){
-                        return Retrieve::retrieveFormat($model->depn);
-                      }
-                    ],
-
-                    [
-                      'attribute'=>'nbv',
-                      'value'=>function($model){
-                        return Retrieve::retrieveFormat($model->nbv);
+                          return Retrieve::retrieveFormat($model->amount);
                       }
                     ],
                 ],
             ]) ?>
             <br>
 
-            <h3>Boiler Summary</h3>
-            <?= DetailView::widget([
-                'model' => $model_sum,
-                'attributes' => [
-                  //  'id',
-                  'boiler_id',
-                  'year_from',
-                  'year_to',
-
-                  [
-                    'attribute'=>'purchase_cost',
-                    'value'=>function($model){
-                      return Retrieve::retrieveFormat($model->purchase_cost);
-                    }
-                  ],
-                  'total_dep_year',
-
-                  [
-                    'attribute'=>'total_dep_amount',
-                    'value'=>function($model){
-                      return Retrieve::retrieveFormat($model->total_dep_amount);
-                    }
-                  ],
-
-                  [
-                    'attribute'=>'balance',
-                    'value'=>function($model){
-                      return Retrieve::retrieveFormat($model->balance);
-                    }
-                  ],
-                ],
-            ]) ?>
-
-            <h3>Boiler Depreciation</h3>
-            <table class="table table-bordered">
-              <thead>
-                <th>Year</th>
-                <th>Depreciation Amount</th>
-                <th>Depreciation Expense</th>
-              </thead>
-              <tbody>
-                <?php foreach ($model_line as $key => $value): ?>
-                  <tr>
-                      <td><?php echo $value->years ?></td>
-                      <td><?php echo Retrieve::retrieveFormat($value->dep_amount) ?></td>
-                      <td><?php echo Retrieve::retrieveFormat($value->dep_expense) ?></td>
-                  </tr>
-                <?php endforeach; ?>
-
-
-              </tbody>
-            </table>
       </div>
     </div>
 

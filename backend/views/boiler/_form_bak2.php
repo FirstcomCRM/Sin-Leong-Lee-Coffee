@@ -48,6 +48,7 @@ $date_from = [
       <div class="box-body"><!--Start of main boiler inputs--->
         <div class="row">
           <div class="col-md-3"><!--Asset Type-->
+            <?php echo $form->field($model, 'asset_type')->dropDownList($asset,['id'=>'asset-type', 'style'=>'display:none']) ?>
             <?php echo $form->field($model, 'customer_name')->widget(Select2::classname(), [
               'data' => $customer,
               'pluginOptions' => [
@@ -59,7 +60,6 @@ $date_from = [
             <?php echo $form->field($model, 'purchase_date')->widget(DatePicker::classname(), [
                   'convertFormat'=>true,
                   'readonly' => true,
-                  'options'=>['id'=>'purchase-date'],
                   'pluginOptions' => [
                       'autoclose'=>true,
                       //  'format' => 'mm/dd/yyyy'
@@ -99,12 +99,39 @@ $date_from = [
               <?= $form->field($model_sum, 'invoice_no')->textInput(['maxlength' => true]) ?>
           </div>
           <div class="col-md-3">
-              <?= $form->field($model_sum, 'depn_rate')->textInput(['id'=>'depn-rate']) ?>
+              <?= $form->field($model_sum, 'year')->dropDownList($year,['id'=>'years', 'prompt'=>'Select Year']) ?>
           </div>
         </div><!--End of boiler details, bolter_no, invoice_no, year, purchase cost--->
 
+        <div class="row"><!---Start of cost, acc_depn, depn and nbv--->
+          <div class="col-md-3">
+              <?= $form->field($model_sum, 'cost')->textInput(['maxlength' => true ,'id'=>'cost-id']) ?>
+          </div>
+          <div class="col-md-3">
+              <?= $form->field($model_sum, 'acc_depn')->textInput(['maxlength' => true, 'id'=>'acc-depn-id']) ?>
+          </div>
+          <div class="col-md-3">
+              <?= $form->field($model_sum, 'depn')->textInput(['maxlength' => true, 'readOnly'=>true, 'id'=>'depn-id']) ?>
+          </div>
+          <div class="col-md-3">
+              <?= $form->field($model_sum, 'nbv')->textInput(['maxlength' => true, 'readOnly'=>true, 'id'=>'nbv-id']) ?>
+          </div>
+        </div><!---End of cost, acc_depn, depn and nbv--->
+
+        <div class="row"><!---Start of date_from, date_to--->
+          <div class="col-md-6">
+              <?php $form->field($model_sum, 'date_from')->textInput(['maxlength' => true]) ?>
+              <?= $form->field($model_sum, 'date_from')->dropDownList($date_from,['id'=>'date_from']) ?>
+          </div>
+          <div class="col-md-6">
+              <?php $form->field($model_sum, 'date_to')->textInput(['maxlength' => true]) ?>
+              <?= $form->field($model_sum, 'date_to')->dropDownList($date_to,['id'=>'date_to']) ?>
+          </div>
+        </div><!---End of date_from, date_to--->
+
         <div class="row">
           <div class="col-md-4">
+              <?= $form->field($model_sum, 'total_dep_year')->textInput(['maxlength' => true, 'id'=>'total_dep_year']) ?>
               <?= $form->field($model_sum, 'total_dep_amount')->textInput(['maxlength' => true, 'id'=>'total_dep_amount']) ?>
               <?= $form->field($model_sum, 'balance')->textInput(['maxlength' => true, 'id'=>'balance']) ?>
           </div>
@@ -120,12 +147,12 @@ $date_from = [
       <div class="box-body">
         <table id ="depreciate" class="table table-bordered">
           <thead>
-            <th>Date</th>
+            <th>Year</th>
             <th>Depreciation Amount</th>
             <th>Depreciation Expense</th>
           </thead>
             <tbody>
-              <?php if (!($model->isNewRecord)): ?>
+              <?php if (!($model->isNewRecord) && $model->asset_type == 1): ?>
                 <?php foreach ($model_line as $key => $value): ?>
                   <tr>
                     <td><?php echo $form->field($value, 'date_from')->textInput(['maxlength'=>true, 'name'=>'year_list[]'])->label(false) ?></td>
@@ -134,6 +161,8 @@ $date_from = [
                   </tr>
                 <?php endforeach; ?>
               <?php endif; ?>
+
+
 
               <?php //endif; ?>
             </tbody>
