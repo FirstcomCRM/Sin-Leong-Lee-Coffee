@@ -87,4 +87,6 @@ class InvoiceQuantitySearch extends InvoiceQuantity
 
         return $result = Yii::$app->db->createCommand($sql)->queryAll();
     }
+
+    
 }

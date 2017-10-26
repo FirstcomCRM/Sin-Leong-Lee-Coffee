@@ -8,16 +8,10 @@ use Yii;
  * This is the model class for table "boiler".
  *
  * @property integer $id
- * @property string $customer
- * @property string $bolter_no
- * @property string $invoice_no
- * @property string $pur_date
- * @property string $pur_cost
- * @property string $cost
- * @property string $acc_depn
- * @property string $year
- * @property string $depn
- * @property string $nbv
+ * @property string $customer_name
+ * @property integer $assete_type
+ * @property string $purchase_date
+ * @property string $amount
  */
 class Boiler extends \yii\db\ActiveRecord
 {
@@ -35,10 +29,11 @@ class Boiler extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['customer', 'bolter_no', 'invoice_no', 'pur_date', 'pur_cost', 'cost', 'acc_depn', 'year'], 'required'],
-            [['cost', 'depn', 'nbv','acc_depn'], 'number'],
-            [['year'], 'safe'],
-            [['customer', 'bolter_no', 'invoice_no', 'pur_date', 'pur_cost'], 'string', 'max' => 255],
+            [['customer_name', 'purchase_date'], 'required'],
+            //[['asset_type'], 'integer'],
+            [['purchase_date'], 'safe'],
+            [['amount'], 'number'],
+            [['customer_name'], 'string', 'max' => 75],
         ];
     }
 
@@ -49,16 +44,10 @@ class Boiler extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'customer' => 'Customer',
-            'bolter_no' => 'Bolter No',
-            'invoice_no' => 'Invoice No',
-            'pur_date' => 'Purchase Date',
-            'pur_cost' => 'Purchase Cost',
-            'cost' => 'Cost',
-            'acc_depn' => 'Acc Depn',
-            'year' => 'Year',
-            'depn' => 'Depn',
-            'nbv' => 'Nbv',
+            'customer_name' => 'Customer Name',
+          //  'asset_type' => 'Asset Type',
+            'purchase_date' => 'Purchase Date',
+            'amount' => 'Amount',
         ];
     }
 }

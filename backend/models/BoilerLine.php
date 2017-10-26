@@ -9,9 +9,11 @@ use Yii;
  *
  * @property integer $id
  * @property integer $boiler_id
- * @property string $years
+ * @property string $date_from
+ * @property string $date_to
  * @property string $dep_amount
  * @property string $dep_expense
+ * @property string $customer_name
  */
 class BoilerLine extends \yii\db\ActiveRecord
 {
@@ -29,9 +31,11 @@ class BoilerLine extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['date_from', 'date_to', 'dep_amount', 'dep_expense', 'customer_name'], 'required'],
             [['boiler_id'], 'integer'],
-            [['years'], 'safe'],
+            [['date_from', 'date_to'], 'safe'],
             [['dep_amount', 'dep_expense'], 'number'],
+            [['customer_name'], 'string', 'max' => 75],
         ];
     }
 
@@ -43,9 +47,11 @@ class BoilerLine extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'boiler_id' => 'Boiler ID',
-            'years' => 'Years',
-            'dep_amount' => 'Depreciation Amount',
-            'dep_expense' => 'Depreciation Expense',
+            'date_from' => 'Date From',
+            'date_to' => 'Date To',
+            'dep_amount' => 'Dep Amount',
+            'dep_expense' => 'Dep Expense',
+            'customer_name' => 'Customer Name',
         ];
     }
 }

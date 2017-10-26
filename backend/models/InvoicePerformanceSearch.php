@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\InvoicePerformance;
-
+use yii\data\Pagination;
 /**
  * InvoicePerformanceSearch represents the model behind the search form about `backend\models\InvoicePerformance`.
  */
@@ -15,12 +15,19 @@ class InvoicePerformanceSearch extends InvoicePerformance
     /**
      * @inheritdoc
      */
+     public $year_to;
+     public $month_to;
+     public $year_from;
+     public $month_from;
+
     public function rules()
     {
         return [
             [['id', 'invoice_id'], 'integer'],
-            [['customer_name', 'invoice_no', 'date', 'average_cost', 'job_no', 'sales_person', 'customer_card_id', 'invoice_item_code'], 'safe'],
+            [['customer_name', 'invoice_no', 'date', 'average_cost', 'job_no', 'sales_person', 'customer_card_id', 'invoice_item_code','item_code','item_name','item_abbr', 'year_to','month_to','year_from','month_from'], 'safe'],
             [['quantity', 'amount'], 'number'],
+        //    [['customer_name'],'required']
+
         ];
     }
 
@@ -73,8 +80,9 @@ class InvoicePerformanceSearch extends InvoicePerformance
             ->andFilterWhere(['like', 'job_no', $this->job_no])
             ->andFilterWhere(['like', 'sales_person', $this->sales_person])
             ->andFilterWhere(['like', 'customer_card_id', $this->customer_card_id])
-            ->andFilterWhere(['like', 'invoice_item_code', $this->invoice_item_code]);
-
+            ->andFilterWhere(['like', 'invoice_item_code', $this->invoice_item_code])
+            ->andFilterWhere(['like', 'item_code',$this->item_code])
+            ->andFilterWhere(['like', 'item_name',$this->item_name]);
         return $dataProvider;
     }
     public function performance_list($month = null,$year = null)
@@ -92,4 +100,82 @@ class InvoicePerformanceSearch extends InvoicePerformance
 
         return $result = Yii::$app->db->createCommand($sql)->queryAll();
     }
+
+
+//edr
+    public function quantity_list($params){
+      $query = InvoicePerformance::find();
+
+      // add conditions that should always apply here
+
+      $dataProvider = new ActiveDataProvider([
+          'query' => $query,
+      ]);
+
+      $this->load($params);
+
+      if (!$this->validate()) {
+          // uncomment the following line if you do not want to return any records when validation fails
+          // $query->where('0=1');
+          return $dataProvider;
+      }
+
+
+      if (!empty($this->month_from)) {
+        $ym_from = $this->month_from.'-'.$this->year_from;
+        $ym_to = $this->month_to.'-'.$this->year_to;
+        $date_from = date('Y-m-01', strtotime($ym_from));
+        $date_to = date('Y-m-t', strtotime($ym_to));
+
+      }else{
+        $date_from = '';
+        $date_to = '';
+      }
+      if (!empty($this->month_from)) {
+        /*$count = InvoicePerformance::find()->select(['customer_name'])->distinct()
+                      ->andFilterWhere(['between','date',$date_from,$date_to])
+                      ->andFilterWhere(['like', 'customer_name', $this->customer_name])
+                     ->andFilterWhere(['like', 'item_code',$this->item_code])
+                     ->count();*/
+
+         /*$pagination = new Pagination([
+            'defaultPageSize' => 10,
+            'totalCount' => $count
+        ]);*/
+
+        $custFileDistinct = InvoicePerformance::find()->select(['customer_name'])->distinct()
+                      ->andFilterWhere(['between','date',$date_from,$date_to])
+                      ->andFilterWhere(['like', 'customer_name', $this->customer_name])
+                     ->andFilterWhere(['like', 'item_code',$this->item_code])
+                     ->andFilterWhere(['like', 'item_name',$this->item_name])
+                    //  ->offset($pagination->offset)
+                    //  ->limit($pagination->limit)
+                     ->all();
+      }else{
+          $custFileDistinct = InvoicePerformance::find()->where(['id'=>0])->all();
+      }
+
+      //return $dataProvider;
+      return $custFileDistinct;
+    }
+
+    public function perform_list($params){
+      $query = InvoicePerformance::find();
+
+      // add conditions that should always apply here
+
+      if (!$this->validate()) {
+          // uncomment the following line if you do not want to return any records when validation fails
+          // $query->where('0=1');
+      //    $this->load($params);
+          //return $dataProvider;
+      }
+
+
+       $this->load($params);
+
+    }
+
+
+
 }

@@ -39,6 +39,7 @@ class InvoicePerformance extends \yii\db\ActiveRecord
             //[['customer_name', 'invoice_no', 'date', 'quantity', 'amount', 'average_cost', 'job_no', 'customer_card_id', 'invoice_item_code', 'invoice_id'], 'required'],
             [['quantity', 'amount'], 'number'],
             [['invoice_id'], 'integer'],
+            [['item_code','item_name','item_abbr'],'safe'],
             [['customer_name', 'invoice_no', 'date', 'average_cost', 'job_no', 'sales_person', 'customer_card_id', 'invoice_item_code'], 'string', 'max' => 255],
         ];
     }
@@ -61,6 +62,9 @@ class InvoicePerformance extends \yii\db\ActiveRecord
             'customer_card_id' => 'Customer Card ID',
             'invoice_item_code' => 'Invoice Item Code',
             'invoice_id' => 'Invoice ID',
+            'item_code'=>'Item Code',
+            'item_name'=>'Item Name',
+            'item_abbr'=> 'Item Abbr',
         ];
     }
 }

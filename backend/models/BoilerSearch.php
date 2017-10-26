@@ -19,8 +19,8 @@ class BoilerSearch extends Boiler
     {
         return [
             [['id'], 'integer'],
-            [['customer', 'bolter_no', 'invoice_no', 'pur_date', 'pur_cost', 'acc_depn', 'year'], 'safe'],
-            [['cost', 'depn', 'nbv'], 'number'],
+            [['customer_name', 'asset_type', 'purchase_date', 'amount'], 'safe'],
+
         ];
     }
 
@@ -61,18 +61,11 @@ class BoilerSearch extends Boiler
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'cost' => $this->cost,
-            'year' => $this->year,
-            'depn' => $this->depn,
-            'nbv' => $this->nbv,
+            'asset_type'=>$this->asset_type
         ]);
 
-        $query->andFilterWhere(['like', 'customer', $this->customer])
-            ->andFilterWhere(['like', 'bolter_no', $this->bolter_no])
-            ->andFilterWhere(['like', 'invoice_no', $this->invoice_no])
-            ->andFilterWhere(['like', 'pur_date', $this->pur_date])
-            ->andFilterWhere(['like', 'pur_cost', $this->pur_cost])
-            ->andFilterWhere(['like', 'acc_depn', $this->acc_depn]);
+        $query->andFilterWhere(['like', 'customer_name', $this->customer_name])
+            ->andFilterWhere(['like', 'purchase_date', $this->purchase_date]);
 
         return $dataProvider;
     }
