@@ -1,54 +1,107 @@
 //onload document.ready
 $(function() {
+    var type = $('#asset-type').val();
+    if (type == 1) {
+      $('.boiler-sum').show();
+    }else{
+      $('.boiler-sum').hide();
+    }
 
-  //$('#date_to').change(function(){
-  //    createLine();
-  //console.log('change at dep_rate');
-  //});
+  //  var testdata = new Date('2017-1-1')
+//    var date = moment(testdata); //Get the current date
+//    var con_date = date.format("YYYY-MM-DD"); //2014-07-10
+//    console.log(con_date);
 
-  $('#depn-rate').change(function(){
-      createLine();
-    //  console.log('change at dep_rate');
-    //alert("The text has been changed.");
+  $("#asset-type").change(function () {
+        var end = this.value;
+        //var firstDropVal = $('#pick').val();
+        console.log(end);
+        if (end == 1) {
+
+          $('.boiler-sum').show();
+        }else{
+
+            $('.boiler-sum').hide();
+        }
+    });
+
+  $('#cost-id').change(function(){
+    getDepn();
+    getNbv();
   });
 
+  $('#acc-depn-id').change(function(){
+    getNbv();
+  });
+
+  $('#years').change(function(){
+    $("#date_to").empty();
+    $("#date_from").empty();
+    var year_base = parseInt($('#years').val());
+  //  var year_add = parseInt(year_base)+5;
+    var year_add = parseInt(year_base)+5;
+    var option = '';
+    var dates = ''
+    var testdate = '';
+    var con_date = '';
+  //  console.log(year_base);
+  //  console.log(year_add);
+    for (var y = year_base; y <= year_add; y++) {
+//      console.log(y);
+      for (var m = 1; m <= 12; m++) {
+        var dates = y+'-'+m+'-'+01;
+        var testdate = new Date(dates);
+        var moment_date = moment(testdate);
+        var con_date = moment_date.format("YYYY-MM-DD")
+      //  console.log(con_date);
+      //  option += '<option value="'+ dates + '">' + dates + '</option>';
+       option += '<option value="'+ con_date + '">' + con_date + '</option>';
+      }
+    }
+    /*var qty = 5;
+    var option = '';
+    for (var i=1;i <= qty;i++){
+      option += '<option value="'+ i + '">' + i + '</option>';
+    }*/
+    $('#date_to').append(option);
+    $('#date_from').append(option);
+
+  });
+
+  $('#date_to').change(function(){
+      createLine();
+
+  });
 
 });
 
+
+function getDepn(){
+  var cost = $('#cost-id').val();
+  var depn =  cost/3;
+  $('#depn-id').val(parseFloat(depn).toFixed(2));
+}
+
+function getNbv(){
+  var cost = $('#cost-id').val();
+  var acc = $('#acc-depn-id').val();
+  var depn = cost/3;
+
+  var nbv = cost - acc - depn;
+  $('#nbv-id').val(parseFloat(nbv).toFixed(2));
+}
+
+
 function createLine(){
-
+  var date_to = $('#date_to').val();
+  var date_from = $('#date_from').val();
+  var date_from_a = $('#date_from').val();
+  var cost = $('#cost-id').val();
   var purchase_cost = $('#purchase-cost').val();
-  var purchase_cost_a = $('#purchase-cost').val();
-  var depn_rate = $('#depn-rate').val();
-  var int_depn_rate = parseInt(depn_rate);
-  var purchase_date = $('#purchase-date').val();
-  var purchase_date_a = $('#purchase-date').val();
   var zero = 0;
-  $('#total_dep_amount').val(parseFloat(purchase_cost).toFixed(2));
 
-  var end_purchase_date =  moment(purchase_date).add(int_depn_rate,'years').format('YYYY-MM-DD');
-  var result = moment(end_purchase_date).diff(moment(purchase_date),'months',true);
-  //var year_result =  moment(date_to).diff(moment(date_from),'years',true);
-
-  //console.log(jQuery.type(test));
-
-  //var depreciate_value = (parseInt(purchase_cost)/int_depn_rate)*0.08;
-  var depreciate_value = (parseInt(purchase_cost)/(int_depn_rate*12)).toFixed(2);
-  console.log(depreciate_value);
-  $('#depreciate >tbody >tr').remove();
-  $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
-
-  for (var i = 0; i < result; i++) {
-     purchase_cost = purchase_cost - depreciate_value;
-     purchase_cost = parseFloat(purchase_cost).toFixed(2);
-     purchase_date = moment(purchase_date).add(1, 'month').format("YYYY-MM-DD");
-     $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+depreciate_value+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
-
-  }
-    var balance = purchase_cost;
-      $('#balance').val(parseFloat(balance).toFixed(2));
-  //   console.log(test_res);
-  /*$('#total_dep_year').val(parseInt(year_result));
+  var year_result =  moment(date_to).diff(moment(date_from),'years',true);
+  $('#total_dep_year').val(parseInt(year_result));
 
   var dep_amount = purchase_cost - cost;
   $('#total_dep_amount').val(dep_amount);
@@ -60,21 +113,24 @@ function createLine(){
   // var depreciate_value = (dep_amount/year_result)*0.08;
   var depreciate_value = (dep_amount/year_result);
    depreciate_value = parseFloat(depreciate_value).toFixed(2);
-
+// var test_res = moment().add(6,'months');
+//var test_res = moment(date_to).add(2, 'month').format("YYYY-MM-DD");
   $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+date_from_a+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+dep_amount+ '">'+'</td></tr>');
 
 for (var i = 0; i < result; i++) {
-
+//  var test_res = moment(date_from).add(1, 'month').format("YYYY-MM-DD");
+//    console.log(test_res);
+//    console.log(date_from);
    purchase_cost = purchase_cost - depreciate_value;
    purchase_cost = parseFloat(purchase_cost).toFixed(2);
    date_from = moment(date_from).add(1, 'month').format("YYYY-MM-DD");
    $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+date_from+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+depreciate_value+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
 
+
 }
   var balance = purchase_cost;
     $('#balance').val(parseFloat(balance).toFixed(2));
 //   console.log(test_res);
-*/
 }
 
 function getYear() {

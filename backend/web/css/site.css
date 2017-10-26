@@ -131,3 +131,11 @@ table.detail-view th {
 table.detail-view td {
     width: 75%;
 }
+
+.qty-num{
+  width: 5%%;
+}
+
+.qty-main{
+  width: 45%;
+}
