@@ -3,8 +3,6 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
-use yii\widgets\LinkPager;
-use yii\widgets\Pjax;
 use backend\models\InvoicePerformance;
 //use yii\widgets\LinkPager;
 //use yii\widgets\Pjax;
@@ -41,9 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
       <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
         <div class="table table-responsive">
           <?php if (!empty($custFileDistinct)): ?>
-
+           <h6>Origin Date Start:</h6> <?php echo $date_from ?>
+           <h6>Origin Date End</h6><?php echo $date_to ?>
+           <h6>Origin Date End modified to 1</h6>
            <?php
               $date_b = date('Y-m-01',strtotime($date_to));
+              echo $date_b;
             ?>
            <hr>
            <?php $date_a = date_create($date_from) ?>
@@ -68,7 +69,6 @@ $this->params['breadcrumbs'][] = $this->title;
               }
 
            } ?>
-
            <?php foreach ($custFileDistinct as $key => $value): ?>
              <div class="table-responsive">
                <table class="table table-bordered">
@@ -130,8 +130,6 @@ $this->params['breadcrumbs'][] = $this->title;
              </div>
 
            <?php endforeach; ?>
-
-
           <?php endif; ?>
 
         </div>
