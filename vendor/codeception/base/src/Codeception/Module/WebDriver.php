@@ -385,16 +385,14 @@ class WebDriver extends CodeceptionModule implements
      * <?php // inside Helper\Acceptance
      * public function _before(TestInterface $test)
      * {
-     *      $name = $test->getMetadata()->getName();
+     *      $name = \Codeception\Test\Descriptor::getTestAsString($test->toString());
      *      $this->getModule('WebDriver')->_capabilities(function($currentCapabilities) use ($name) {
      *          $currentCapabilities['name'] = $name;
-     *          return $currentCapabilities;
+     *          return new DesiredCapabilities($currentCapabilities);
      *      });
      * }
      * ```
-     * In this case, please ensure that `\Helper\Acceptance` is loaded before WebDriver so new capabilities could be applied.
      *
-     * @api
      * @param \Closure $capabilityFunction
      */
     public function _capabilities(\Closure $capabilityFunction)
@@ -414,17 +412,9 @@ class WebDriver extends CodeceptionModule implements
         }
         $this->setBaseElement();
 
-        if (method_exists($this->webDriver, 'getCapabilities')) {
-            $browser = $this->webDriver->getCapabilities()->getBrowserName();
-            $capabilities = $this->webDriver->getCapabilities()->toArray();
-        } else {
-            //Used with facebook/php-webdriver <1.3.0 (usually on PHP 5.4)
-            $browser = $this->config['browser'];
-            $capabilities = $this->config['capabilities'];
-        }
         $test->getMetadata()->setCurrent([
-            'browser' => $browser,
-            'capabilities' => $capabilities,
+            'browser' => $this->webDriver->getCapabilities()->getBrowserName(),
+            'capabilities' => $this->webDriver->getCapabilities()->toArray()
         ]);
     }
 
@@ -1215,52 +1205,22 @@ class WebDriver extends CodeceptionModule implements
             throw new ElementNotFound($formSelector, "Form via CSS or XPath");
         }
         $form = reset($form);
-
-        $els = [];
         foreach ($params as $name => $values) {
-            $this->pushFormField($els, $form, $name, $values);
-        }
-
-        foreach ($els as $arrayElement) {
-            list($el, $values) = $arrayElement;
-
+            $els = $form->findElements(WebDriverBy::name($name));
+            if (empty($els)) {
+                throw new ElementNotFound($name);
+            }
             if (!is_array($values)) {
                 $values = [$values];
             }
-
             foreach ($values as $value) {
-                $ret = $this->proceedSeeInField($el, $value);
+                $ret = $this->proceedSeeInField($els, $value);
                 if ($assertNot) {
                     $this->assertNot($ret);
                 } else {
                     $this->assert($ret);
                 }
             }
-        }
-    }
-
-    /**
-     * Map an array element passed to seeInFormFields to its corresponding WebDriver element,
-     * recursing through array values if the field is not found.
-     *
-     * @param array $els The previously found elements.
-     * @param RemoteWebElement $form The form in which to search for fields.
-     * @param string $name The field's name.
-     * @param mixed $values
-     * @return void
-     */
-    protected function pushFormField(&$els, $form, $name, $values)
-    {
-        $el = $form->findElements(WebDriverBy::name($name));
-
-        if ($el) {
-            $els[] = [$el, $values];
-        } elseif (is_array($values)) {
-            foreach ($values as $key => $value) {
-                $this->pushFormField($els, $form, "{$name}[$key]", $value);
-            }
-        } else {
-            throw new ElementNotFound($name);
         }
     }
 
@@ -2322,7 +2282,7 @@ class WebDriver extends CodeceptionModule implements
     /**
      * Wait for $timeout seconds.
      *
-     * @param int|float $timeout secs
+     * @param int $timeout secs
      * @throws \Codeception\Exception\TestRuntimeException
      */
     public function wait($timeout)
@@ -2334,7 +2294,7 @@ class WebDriver extends CodeceptionModule implements
                 Please note that wait method accepts number of seconds as parameter."
             );
         }
-        usleep($timeout * 1000000);
+        sleep($timeout);
     }
 
     /**

@@ -2,7 +2,6 @@
 /* @var $panel yii\debug\panels\DbPanel */
 /* @var $searchModel yii\debug\models\search\Db */
 /* @var $dataProvider yii\data\ArrayDataProvider */
-/* @var $hasExplain bool */
 
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -52,7 +51,7 @@ echo GridView::widget([
         [
             'attribute' => 'query',
             'value' => function ($data) use ($hasExplain, $panel) {
-                $query = Html::tag('div', Html::encode($data['query']));
+                $query = Html::encode($data['query']);
 
                 if (!empty($data['trace'])) {
                     $query .= Html::ul($data['trace'], [
@@ -68,7 +67,7 @@ echo GridView::widget([
 
                     $query .= Html::tag(
                         'div',
-                        Html::a('[+] Explain', ['db-explain', 'seq' => $data['seq'], 'tag' => Yii::$app->controller->summary['tag']]),
+                        Html::a('[+] Explain', (['db-explain', 'seq' => $data['seq'], 'tag' => Yii::$app->controller->summary['tag']])),
                         ['class' => 'db-explain']
                     );
                 }

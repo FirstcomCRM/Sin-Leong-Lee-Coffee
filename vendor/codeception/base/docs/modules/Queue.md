@@ -131,6 +131,16 @@ $I->addMessageToQueue('this is a messages', 'default');
  * `param string` $queue Queue Name
 
 
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
+
+
 ### clearQueue
  
 Clear all messages of the queue/tube

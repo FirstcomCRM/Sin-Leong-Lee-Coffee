@@ -32,7 +32,13 @@ class ComposerStaticInita5f8917bab55559e938eb390ce7315b1
         'k' => 
         array (
             'kartik\\select2\\' => 15,
+            'kartik\\date\\' => 12,
             'kartik\\base\\' => 12,
+        ),
+        'd' => 
+        array (
+            'dosamigos\\highcharts\\' => 21,
+            'dosamigos\\chartjs\\' => 18,
         ),
         'c' => 
         array (
@@ -111,17 +117,29 @@ class ComposerStaticInita5f8917bab55559e938eb390ce7315b1
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            0 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'kartik\\select2\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-select2',
         ),
+        'kartik\\date\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datepicker',
+        ),
         'kartik\\base\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base',
+        ),
+        'dosamigos\\highcharts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/2amigos/yii2-highcharts-widget/src',
+        ),
+        'dosamigos\\chartjs\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/2amigos/yii2-chartjs-widget/src',
         ),
         'cebe\\markdown\\' => 
         array (

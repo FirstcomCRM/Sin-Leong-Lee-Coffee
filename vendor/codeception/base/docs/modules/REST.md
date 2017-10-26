@@ -69,6 +69,16 @@ Adds HTTP authentication via username/password.
  * `[Part]` xml
 
 
+### assertArraySubset
+ 
+Checks that array contains subset.
+
+ * `param array`  $subset
+ * `param array`  $array
+ * `param bool`   $strict
+ * `param string` $message
+
+
 ### deleteHeader
  
 Deletes the header with the passed name.  Subsequent requests
