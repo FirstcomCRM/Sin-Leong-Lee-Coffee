@@ -2,10 +2,14 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use backend\models\AccountList;
+use yii\Helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model backend\models\AccountListSearch */
 /* @var $form yii\widgets\ActiveForm */
+
+$data = AccountList::find()->all();
+$list = ArrayHelper::map($data,'account','account');
 ?>
 
 <div class="account-list-search">
@@ -15,15 +19,13 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'account') ?>
+    <?= $form->field($model, 'account') ->dropDownList($list)?>
 
-    <?= $form->field($model, 'account_details') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?php echo Html::a('<i class="fa fa-undo" aria-hidden="true"></i> Reset',['index'],['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

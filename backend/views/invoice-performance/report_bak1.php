@@ -3,9 +3,7 @@
 use yii\helpers\ArrayHelper;
 use backend\models\InvoicePerformance;
 use backend\models\Expenses;
-use backend\models\ExpensesReport;
 use backend\models\AssetType;
-use backend\models\AccountList;
 use backend\models\BoilerLine;
 use backend\models\Boiler;
 
@@ -43,7 +41,7 @@ $excel_expense = Expenses::find()->where(['between','month',$date_from,$date_to]
     padding-left: 2em;
   }
   .td-left{
-    width: 40%;
+    width: 30%;
     border: none;
   }
   .sub-name{
@@ -295,171 +293,63 @@ total cost amount = avg cost * quanty
   <tr>
     <td colspan = "2">Expense</td>
   </tr>
-  <tr>
-    <td class="td-left" colspan="2"><span class="sub-title">Expense</span></td>
-  </tr>
-  <tr>
-    <td class="td-left"><span class="sub-name">Share Expenses Amount</span></td>
-    <td>
-      <?php
-        $expense = $gProfit/$aProfit;
-        $shared_expense = $excel_expense * $expense;
-        echo '$'.number_format($shared_expense,2);
-      ?>
-    </td>
-  </tr>
+<tr>
+  <td class="td-left" colspan="2"><span class="sub-title">Expense</span></td>
+</tr>
+<tr>
+  <td class="td-left"><span class="sub-name">Share Expenses Amount</span></td>
+  <td>
+    <?php
+      $expense = $gProfit/$aProfit;
+      $shared_expense = $excel_expense * $expense;
+      echo '$'.number_format($shared_expense,2);
+    ?>
+  </td>
+</tr>
+<tr>
+  <td class="td-left"><span class="sub-title">Administrative Costs</span></td>
+</tr>
+<tr>
+  <td class="td-left"><span class="sub-name">loop1</span></td>
+  <td>Data 0</td>
+</tr>
 
-  <tr>
-    <td class="td-left"><span class="sub-title">Administrative Costs</span></td> <!--start of administrative cost---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Administrative Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
+<?php if ($hide == 1): ?>
+  <?php $assets = AssetType::find()->all() ?>
+  <?php foreach ($assets as $key => $value): ?>
     <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
+      <td class="td-left"><span class="sub-name"><?php echo $value->asset ?></td>
       <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
+        <?php if ($value->asset == 'Boiler'): ?>
+          <?php $boiler = BoilerLine::find()->andFilterwhere(['between', 'date_from', $date_from,$date_to])
+                   ->andFilterWhere(['customer_name'=>$searchModel->customer_name])
+                    ->sum('dep_amount');
+                if (!empty($boiler)) {
+                  echo '$'.number_format($boiler,2);
+                  $total_expenses += $boiler;
+                }else{
+                  echo '$'.number_format(0,2);
+                }
+           ?>
+        <?php else: ?>
+          <?php $expenses = Boiler::find()->andFilterWhere(['asset_type'=>$value->id])
+                ->andFilterwhere(['between', 'purchase_date', $date_from,$date_to])
+                ->andFilterWhere(['customer_name'=>$searchModel->customer_name])
+               ->sum('amount');
+
+               if (!empty($expenses)) {
+                 echo '$'.number_format($expenses,2);
+                  $total_expenses += $expenses;
+               }else{
+                   echo '$'.number_format(0,2);
+               }
+
+           ?>
+        <?php endif; ?>
       </td>
     </tr>
-  <?php endforeach; ?><!--end of administrative cost---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Fixed Asset Costs</span></td> <!--start of fixed asset cost---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Fixed Asset Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of fixed asset cost---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Utilities Costs</span></td> <!--start of Utilities Costs---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Utilities Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of Utilities Costs---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Employment Costs</span></td> <!--start of Employment Costs---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Employment Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of Employment Costs---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Marketing Costs</span></td> <!--start of Marketing Costs---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Marketing Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of Marketing Costs---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Customer Expenses</span></td> <!--start of Customer Expenses---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Customer Expenses'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of Customer Expenses---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Factory Maintenance Costs</span></td> <!--start of Factory Maintenance Costs---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Factory Maintenance Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of Factory Maintenance Costs---->
-
-  <tr>
-      <td class="td-left"><span class="sub-title">Motor Vehicle Costs</span></td> <!--start of Motor Vehicle Costs---->
-  </tr>
-  <?php
-  $data = AccountList::find()->where(['transaction_group'=>'Motor Vehicle Costs'])->all();
-   ?>
-  <?php foreach ($data as $key => $value): ?>
-    <tr>
-      <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
-      <td>
-        <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
-              ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
-            echo '$'.number_format($cost,2);
-        ?>
-      </td>
-    </tr>
-  <?php endforeach; ?><!--end of Motor Vehicle Costs---->
+  <?php endforeach; ?>
+<?php endif; ?>
 
 <tr>
   <td class="td-left"><span class="sub-title total">Total Expenses</span></td>
