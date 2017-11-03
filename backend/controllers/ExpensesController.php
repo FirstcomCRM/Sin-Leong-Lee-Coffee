@@ -6,6 +6,7 @@ use Yii;
 use backend\models\Expenses;
 use backend\models\ExpensesSearch;
 use backend\models\ExpensesReport;
+use backend\models\AccountList;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -47,7 +48,7 @@ class ExpensesController extends Controller
         }else{
             return [
 
-            
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -116,7 +117,7 @@ class ExpensesController extends Controller
                 $this->ImportExcel($filename,$year,$month);
 
             }
-            
+
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -124,7 +125,8 @@ class ExpensesController extends Controller
         }
     }
     public function ImportExcel($filename,$year,$month){
-
+        ini_set('max_execution_time', 180);
+        ini_set("memory_limit", "512M");
         $inputFile = 'uploads/expenses/'.$filename;
 
         try{
@@ -140,7 +142,7 @@ class ExpensesController extends Controller
         if($expenses->save())
         {
                 // than you can get id just like that
-                
+
                 $this->expenses_id = $expenses->id; // this is inserted item id
 
         }
@@ -159,37 +161,47 @@ class ExpensesController extends Controller
             }
 
             $expenses_report = new ExpensesReport();
-            $expenses_report->id_no = (string)$rowData[0][1]; 
+            $expenses_report->id_no = (string)$rowData[0][1];
             $expenses_report->scr = (string)$rowData[0][2];
-            $expenses_report->date = (string)$rowData[0][3]; 
+            $expenses_report->date = (string)$rowData[0][3];
             $expenses_report->memo = (string)$rowData[0][4];
-            $expenses_report->debit = (string)$rowData[0][5]; 
+            $expenses_report->debit = (string)$rowData[0][5];
             $expenses_report->credit = (string)$rowData[0][6];
-            $expenses_report->job_no = (string)$rowData[0][7]; 
+            $expenses_report->job_no = (string)$rowData[0][7];
             $expenses_report->net_activity = (string)$rowData[0][8];
             $expenses_report->ending_balance = (string)$rowData[0][9];
-            $expenses_report->expenses_id = $this->expenses_id; 
+            $expenses_report->expenses_id = $this->expenses_id;
+
+            $data = AccountList::find()->where(['account'=>$expenses_report->id_no])->one();
+            if (!empty($data)) {
+              $code = $expenses_report->id_no;
+            }
+
+            if ($rowData[0][4] == 'Total:') {
+              $expenses_report->id_code = $code;
+              $expenses_report->date_uploaded = $year.'-'.$month.'-01';
+            }
             $expenses_report->save();
-            
+
             if($rowData[0][4] == 'Grand Total:'){
                 //echo 'hello';
                 $this->grand_total = $rowData[0][5];
                 $expenses_new = Expenses::findOne($this->expenses_id);
                 $expenses_new->total = $this->grand_total;
-                
+
                 if($expenses_new->save()){
                     Yii::$app->getSession()->setFlash('success', 'Import Successfully');
                     Yii::$app->response->redirect(['expenses/index']);
                 }
                 break;
-                
+
             }else{
                 continue;
             }
 
         }
-        
-        
+
+
     }
 
     public function actionDelete($id)
