@@ -30,6 +30,7 @@ class AccountList extends \yii\db\ActiveRecord
             [['account', 'account_details'], 'required'],
             [['account'],'unique'],
             [['account'], 'string', 'max' => 20],
+            [['transaction_type','transaction_group'],'string', 'max'=>75],
             [['account_details'], 'string', 'max' => 50],
         ];
     }
@@ -43,6 +44,8 @@ class AccountList extends \yii\db\ActiveRecord
             'id' => 'ID',
             'account' => 'Account',
             'account_details' => 'Account Details',
+            'transaction_type'=>'Transaction Type',
+            'transaction_group'=>'Transaction Group',
         ];
     }
 }
