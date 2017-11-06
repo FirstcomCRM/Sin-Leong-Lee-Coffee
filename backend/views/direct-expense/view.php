@@ -12,37 +12,43 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="direct-expense-view">
 
-    <p class="text-right">
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
+    <div class="box box-info">
+      <div class="box-body">
+        <p>
+            <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        </p>
+
+        <?= DetailView::widget([
+            'model' => $model,
+            'attributes' => [
+
+              [
+                'attribute'=>'expense_type',
+                'value'=>function($model){
+                  return Retrieve::retrieveAsset($model->expense_type);
+                }
+              ],
+                'customer_name',
+                'date',
+                [
+                  'attribute'=>'expenses',
+                  'value'=>function($model){
+                    return Retrieve::retrieveFormat($model->expenses);
+                  },
+                ],
+
             ],
         ]) ?>
-    </p>
+      </div>
+    </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
 
-          [
-            'attribute'=>'expense_type',
-            'value'=>function($model){
-              return Retrieve::retrieveAsset($model->expense_type);
-            }
-          ],
-            'customer_name',
-            'date',
-            [
-              'attribute'=>'expenses',
-              'value'=>function($model){
-                return Retrieve::retrieveFormat($model->expenses);
-              },
-            ],
-
-        ],
-    ]) ?>
 
 </div>

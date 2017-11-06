@@ -36,7 +36,7 @@ $cust = ArrayHelper::map($data,'customer_name','customer_name');
 ?>
 
 <div class="invoice-performance-search">
-  <h3>QTY SEARCH</h3>
+
     <?php $form = ActiveForm::begin([
         'action' => ['qty-index'],
         'method' => 'get',

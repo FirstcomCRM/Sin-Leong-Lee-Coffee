@@ -15,15 +15,10 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'item') ?>
 
     <?= $form->field($model, 'item_name') ?>
-
-    <?= $form->field($model, 'asset') ?>
-
-    <?= $form->field($model, 'income') ?>
 
     <?php // echo $form->field($model, 'exp_cos') ?>
 

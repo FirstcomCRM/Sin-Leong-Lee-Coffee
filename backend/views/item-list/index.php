@@ -12,26 +12,40 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="item-list-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Search</h3>
+      </div>
+      <div class="box-body">
+          <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
+      </div>
+    </div>
 
-    <p>
-        <?= Html::a('Create Item List', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-      //  'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    <div class="box box-success">
+      <div class="box-header with-border">
+        <h3 class="box-title">Item List</h3>
+      </div>
+      <div class="box-body">
+        <p>
+            <?= Html::a('Create Item List', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
+          //  'filterModel' => $searchModel,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'item',
-            'item_name',
-            'asset',
-            'income',
-            // 'exp_cos',
+                //'id',
+                'item',
+                'item_name',
+                'asset',
+                'income',
+                // 'exp_cos',
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+                ['class' => 'yii\grid\ActionColumn'],
+            ],
+        ]); ?>
+      </div>
+    </div>
+
 </div>

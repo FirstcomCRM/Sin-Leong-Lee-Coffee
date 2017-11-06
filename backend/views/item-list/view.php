@@ -12,30 +12,35 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="item-list-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Add', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
+    <div class="box box-info">
+      <div class="box-body">
+        <p>
+            <?= Html::a('Add', ['create'], ['class' => 'btn btn-success']) ?>
+            <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure you want to delete this item?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        </p>
+
+        <?= DetailView::widget([
+            'model' => $model,
+            'attributes' => [
+                'id',
+                'item',
+                'item_name',
+                'asset',
+                'income',
+                'exp_cos',
             ],
         ]) ?>
-    </p>
+      </div>
+    </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'item',
-            'item_name',
-            'asset',
-            'income',
-            'exp_cos',
-        ],
-    ]) ?>
+
 
 </div>
