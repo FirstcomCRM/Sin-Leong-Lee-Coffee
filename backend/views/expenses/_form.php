@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 
 	    <select name="year" class="col-md-1 btn btn-default" required>
 	        <option value="">Year</option>
-	                <?php 
+	                <?php
 
 	                   for($i = date('Y') ; $i >= 1950; $i--){
 	                    //echo "<option value = $i>$i</option>";
