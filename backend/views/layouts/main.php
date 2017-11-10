@@ -118,6 +118,7 @@ DashboardAsset::register($this);
           <ul class="treeview-menu">
             <li class="active"><a href="<?php echo Url::to(['invoice/index']);?>"><i class="fa fa-circle-o"></i> Invoice</a></li>
             <li><a href="<?php echo Url::to(['expenses/index']);?>"><i class="fa fa-circle-o"></i> Expenses</a></li>
+            <li><a href="<?php echo Url::to(['rebates/index']);?>"><i class="fa fa-circle-o"></i> Rebates</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -205,7 +206,7 @@ DashboardAsset::register($this);
             <li><a href="<?php echo Url::to(['invoice-performance/index']);?>"><i class="fa fa-circle-o"></i> Customer Performance</a></li>
             <li><a href="<?php echo Url::to(['customer/index']);?>"><i class="fa fa-circle-o"></i> Customer</a></li>
             <li><a href="<?php echo Url::to(['boiler/index']);?>"><i class="fa fa-circle-o"></i> Boiler</a></li>
-            <!--- <li><a href="<?php echo Url::to(['gii/default']);?>"><i class="fa fa-cog" aria-hidden="true"></i></i> Gii</a></li>--->
+            <!---<li><a href="<?php echo Url::to(['gii/default']);?>"><i class="fa fa-cog" aria-hidden="true"></i></i> Gii</a></li>--->
           </ul>
         </li>
       </ul>
