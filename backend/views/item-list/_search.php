@@ -20,6 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'item_name') ?>
 
+    <?php  echo $form->field($model,'income') ?>
     <?php // echo $form->field($model, 'exp_cos') ?>
 
     <div class="form-group">
