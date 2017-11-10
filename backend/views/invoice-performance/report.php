@@ -6,9 +6,7 @@ use backend\models\Expenses;
 use backend\models\ExpensesReport;
 use backend\models\AssetType;
 use backend\models\AccountList;
-use backend\models\BoilerLine;
-use backend\models\Boiler;
-
+use backend\models\RebateReport;
 
 $total_expenses = 0;
 $total_cost = 0;
@@ -27,6 +25,7 @@ $hide = 0; //edr temporaril;y hide the boiler, asset types
 
 
 $excel_expense = Expenses::find()->where(['between','month',$date_from,$date_to])->sum('total');
+$rebate_list = AccountList::find()->where(['transaction_type'=>'Rebate'])->all();
 
  ?>
 
@@ -54,6 +53,7 @@ $excel_expense = Expenses::find()->where(['between','month',$date_from,$date_to]
     font-size: 20px;
   }
 </style>
+
 
 
 <div class="container">
@@ -139,6 +139,51 @@ total cost amount = avg cost * quanty
           ?>
   </td>
 </tr>
+
+<tr><!--Rebate and Discount row-->
+  <td class="td-left"><span class="sub-title">Rebates & Discount</td>
+</tr>
+<?php foreach ($rebate_list as $value): ?>
+  <?php
+    $rebate_reports = RebateReport::find()->where(['account'=>$value->account])
+                    ->andWhere(['customer'=>$searchModel->customer_name])
+                    ->one();
+   ?>
+
+     <tr>
+       <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
+       <td>
+         <?php
+            $rebate_sum =  RebateReport::find()->where(['account'=>$value->account])
+                      ->andWhere(['customer'=>$searchModel->customer_name])
+                      ->andWhere(['between','date',$date_from,$date_to])
+                      ->sum('amount');
+            //echo '($'.abs(number_format($rebate_sum,2)).')';
+            $rebate_sum = abs($rebate_sum);
+            echo '($'.number_format($rebate_sum,2). ')'
+          ?>
+       </td>
+     </tr>
+
+<?php endforeach; ?>
+
+<tr>
+  <td class="td-left"><span class="sub-title total">Total Rebate and Discount</td>
+  <td>
+    <span class="total">
+      <?php
+         $rebate_sum =  RebateReport::find() ->where(['customer'=>$searchModel->customer_name])
+                   ->andWhere(['between','date',$date_from,$date_to])
+                   ->sum('amount');
+         //echo '($'.abs(number_format($rebate_sum,2)).')';
+         $rebate_sum = abs($rebate_sum);
+         echo '($'.number_format($rebate_sum,2). ')'
+       ?>
+    </span>
+  </td>
+</tr>
+
+
 <tr>
   <td class="td-left"><span class="sub-title total">Total Income</td>
   <td>
@@ -147,11 +192,14 @@ total cost amount = avg cost * quanty
             ->andFilterWhere(['customer_name'=>$searchModel->customer_name])
             //->andFilterWhere(['!=','item_abbr','M'])
             ->sum('amount');
-            echo '$'.number_format($sTotal,2);
+            $nTotal = $sTotal - $rebate_sum;
+          //  echo '$'.number_format($sTotal,2);
+            echo '$'.number_format($nTotal,2);
           ?>
     </span>
   </td>
 </tr>
+
 </table>
 
 <br>
@@ -321,7 +369,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -340,7 +388,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -359,7 +407,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -378,7 +426,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -397,7 +445,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -416,7 +464,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -435,7 +483,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
@@ -454,7 +502,7 @@ total cost amount = avg cost * quanty
       <td>
         <?php $cost = ExpensesReport::find()->where(['id_code'=>$value->account])
               ->andWhere(['between','date_uploaded',$date_from,$date_to])
-              ->sum('ending_balance');
+              ->sum('debit');
             echo '$'.number_format($cost,2);
         ?>
       </td>
