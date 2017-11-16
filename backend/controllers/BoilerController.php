@@ -58,15 +58,11 @@ class BoilerController extends Controller
     {
 
         $model_sum = BoilerSum::find()->where(['boiler_id'=>$id])->one();
-      //  $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
-    ////    echo '<pre>';
-      //  print_r($model_sum);
-        //echo '</pre>';
-        // /die(0);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'model_sum'=>$model_sum,
-          //  'model_line'=>$model_line,
+      
         ]);
     }
 

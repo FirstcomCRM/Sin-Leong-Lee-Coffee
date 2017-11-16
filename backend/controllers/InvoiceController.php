@@ -108,14 +108,7 @@ class InvoiceController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $year =  Yii::$app->request->post('year');
             $month =  Yii::$app->request->post('month');
-          //  $ym = $month.'-'.$year;
-        //    $model->date_uploaded = date('Y-m-01', strtotime($ym));
-        //    $model->save(false);
-        //    print_r($date_data);
-          //  die();
             $model->file = UploadedFile::getInstance($model,'file');
-
-
 
             if($model->file == null){
 
@@ -132,14 +125,13 @@ class InvoiceController extends Controller
 
             }
 
-
-
         } else {
             return $this->render('create', [
                 'model' => $model,
             ]);
         }
     }
+    
     public function ImportExcel($filename,$year,$month){
 
         $inputFile = 'uploads/invoice/'.$filename;

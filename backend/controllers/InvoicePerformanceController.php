@@ -64,7 +64,6 @@ class InvoicePerformanceController extends Controller
         ini_set('max_execution_time', 180);
         ini_set("memory_limit", "512M");
 
-
         $searchModel = new InvoicePerformanceSearch();
         $date_to = '';
         $date_from='';
@@ -75,7 +74,7 @@ class InvoicePerformanceController extends Controller
           $ym_to = $searchModel->month_to.'-'.$searchModel->year_to;
           $date_from = date('Y-m-01', strtotime($ym_from));
           $date_to = date('Y-m-t', strtotime($ym_to));
-      //    die();
+    
           $this->layout='reports.php';
           return $this->render('report', [
               'searchModel'=> $searchModel,

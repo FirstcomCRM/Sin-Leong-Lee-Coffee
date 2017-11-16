@@ -48,14 +48,7 @@ class CustomerController extends Controller
             $year_to =Yii::$app->request->post('year_to');
 
             $list_all = $model->customer_list_all($customer,$month_from,$month_to,$year_from,$year_to);
-          //  $list = $model->customer_list_all();
-    //        var_dump($list_all);die();
             $list = $model->customer_list_daterange($month_from,$month_to,$year_from,$year_to);
-             /*echo '<pre>';
-
-            print_r($list_all);
-            echo '</pre>';
-            die();*/
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
@@ -63,7 +56,6 @@ class CustomerController extends Controller
                 'list' => $list,
                 'list_all' => $list_all,
             ]);
-
 
 
         }else if(Yii::$app->request->post('pdf')){
@@ -76,7 +68,6 @@ class CustomerController extends Controller
             $this->actionPdf($customer,$month_from,$month_to,$year_from,$year_to);
 
         }else{
-
 
             $list = $model->customer_list_all();
 
