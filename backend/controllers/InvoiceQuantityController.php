@@ -70,11 +70,7 @@ class InvoiceQuantityController extends Controller
         ini_set('max_execution_time', 300);
         ini_set("memory_limit", "512M");
 
-
-      //  $dataProvider = $searchModel->quantity_list(Yii::$app->request->post());
         $custFileDistinct =$searchModel->quantity_list((Yii::$app->request->queryParams));
-      //  $searchModel->load((Yii::$app->request->queryParams));
-      //  print_r($searchModel->month_from);die();
         $ym_from = $searchModel->month_from.'-'.$searchModel->year_from;
         $ym_to = $searchModel->month_to.'-'.$searchModel->year_to;
         $date_from = date('Y-m-01', strtotime($ym_from));
@@ -113,7 +109,7 @@ class InvoiceQuantityController extends Controller
             'custFileDistinct'=>$custFileDistinct,
             'date_from'=>$date_from,
             'date_to'=>$date_to,
-          //  'pagination'=>$pagination
+        
         ]);
 
 
