@@ -12,7 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rebates-index">
 
-
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <div class="box box-info">
@@ -29,11 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'dataProvider' => $dataProvider,
         //    'filterModel' => $searchModel,
             'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
+              ['class' => 'yii\grid\SerialColumn'],
 
-            //    'id',
-                'date_uploaded',
-              //  'total',
+              'date_uploaded',        
 
               ['class' => 'yii\grid\ActionColumn',
                   'template' => '{view} {delete}'

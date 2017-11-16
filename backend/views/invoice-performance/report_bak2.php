@@ -127,8 +127,6 @@ total cost amount = avg cost * quanty
     <?php $sOther = InvoicePerformance::find()->andFilterwhere(['between', 'date', $date_from,$date_to])
           ->andFilterWhere(['customer_name'=>$searchModel->customer_name])
           ->andFilterWhere(['!=','item_abbr','C'])
-        //  ->andFilterWhere(['!=','item_abbr','M'])
-      //    ->andFilterWhere(['!=','item_abbr','T'])
           ->sum('amount');
           if ($sOther ==null) {
             echo '$'.number_format(0,2);

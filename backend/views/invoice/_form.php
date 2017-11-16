@@ -3,9 +3,6 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-
-
-
 /* @var $this yii\web\View */
 /* @var $model backend\models\Invoice */
 /* @var $form yii\widgets\ActiveForm */
@@ -14,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="invoice-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    	
+
     	<select name="month" class="col-md-2 btn btn-default" required>
 	        <option value="">--Select Month--</option>
 	        <option value='January'>January</option>
@@ -33,7 +30,7 @@ use yii\widgets\ActiveForm;
 
 	    <select name="year" class="col-md-1 btn btn-default" required>
 	        <option value="">Year</option>
-	                <?php 
+	                <?php
 
 	                   for($i = date('Y') ; $i >= 1950; $i--){
 	                    //echo "<option value = $i>$i</option>";
@@ -45,10 +42,6 @@ use yii\widgets\ActiveForm;
 	    </select>
 	    <br><br>
 	    <?= $form->field($model, 'file')->fileInput(['required']) ?>
-
-
-
-    
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -27,8 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
 
-                    //'id',
-                    //'month',
                     [
                       'attribute'=>'month',
                       'value'=>function($model){
@@ -37,7 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
                       }
                     ],
 
-                    //'total',
                     [
                       'attribute'=>'total',
                       'value'=>function($model){

@@ -19,9 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="login-box-body">
                 <p class="login-box-msg">Sign in to start your session</p>
 
-            
-
-
                     <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                         <?= $form->field($model, 'username',['options'=>[
