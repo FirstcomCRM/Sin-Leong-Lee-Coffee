@@ -28,13 +28,9 @@ function createLine(){
 
   var end_purchase_date =  moment(purchase_date).add(int_depn_rate,'years').format('YYYY-MM-DD');
   var result = moment(end_purchase_date).diff(moment(purchase_date),'months',true);
-  //var year_result =  moment(date_to).diff(moment(date_from),'years',true);
 
-  //console.log(jQuery.type(test));
-
-  //var depreciate_value = (parseInt(purchase_cost)/int_depn_rate)*0.08;
   var depreciate_value = (parseInt(purchase_cost)/(int_depn_rate*12)).toFixed(2);
-  console.log(depreciate_value);
+  
   $('#depreciate >tbody >tr').remove();
   $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
 
@@ -47,34 +43,7 @@ function createLine(){
   }
     var balance = purchase_cost;
       $('#balance').val(parseFloat(balance).toFixed(2));
-  //   console.log(test_res);
-  /*$('#total_dep_year').val(parseInt(year_result));
 
-  var dep_amount = purchase_cost - cost;
-  $('#total_dep_amount').val(dep_amount);
-
-  var result = moment(date_to).diff(moment(date_from),'months',true);
-//  console.log(result);
-  var test_to = moment(date_to);
-   $('#depreciate >tbody >tr').remove();
-  // var depreciate_value = (dep_amount/year_result)*0.08;
-  var depreciate_value = (dep_amount/year_result);
-   depreciate_value = parseFloat(depreciate_value).toFixed(2);
-
-  $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+date_from_a+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+dep_amount+ '">'+'</td></tr>');
-
-for (var i = 0; i < result; i++) {
-
-   purchase_cost = purchase_cost - depreciate_value;
-   purchase_cost = parseFloat(purchase_cost).toFixed(2);
-   date_from = moment(date_from).add(1, 'month').format("YYYY-MM-DD");
-   $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+date_from+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+depreciate_value+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
-
-}
-  var balance = purchase_cost;
-    $('#balance').val(parseFloat(balance).toFixed(2));
-//   console.log(test_res);
-*/
 }
 
 function getYear() {
