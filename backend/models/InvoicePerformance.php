@@ -3,7 +3,7 @@
 namespace backend\models;
 
 use Yii;
-
+use backend\models\ItemList;
 /**
  * This is the model class for table "invoice_performance".
  *
@@ -67,4 +67,10 @@ class InvoicePerformance extends \yii\db\ActiveRecord
             'item_abbr'=> 'Item Abbr',
         ];
     }
+
+  public function getCodes(){
+    return $this->hasOne(ItemList::className(),['item' => 'invoice_item_code'] );
+  }
+
+
 }
