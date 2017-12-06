@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
               }
 
            } ?>
-
+          
            <?php foreach ($custFileDistinct as $key => $value): ?>
              <div class="table-responsive">
                <table class="table table-bordered">
@@ -81,6 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                      </th>
                    <?php endforeach; ?>
                    <th>Total Qty</th>
+                   <th>Average Percent</th>
                  </thead>
                  <tbody>
                    <?php $file = InvoicePerformance::find()->select(['item_name','item_code'])->distinct()
@@ -120,6 +121,7 @@ $this->params['breadcrumbs'][] = $this->title;
                           }
                         ?>
                         </td>
+                        <td><?php echo number_format($total/count($date_contain),2 ).'%' ?></td>
                       </tr>
 
                     <?php $number += 1 ?>
