@@ -10,7 +10,7 @@ use backend\models\InvoicePerformance;
 /* @var $model backend\models\DirectExpense */
 /* @var $form yii\widgets\ActiveForm */
 
-$file = AssetType::find()->where(['!=','asset','Boiler'])->orderBy(['asset'=>SORT_ASC])->all();
+$file = AssetType::find()->orderBy(['asset'=>SORT_ASC])->asArray()->all();
 $asset = Arrayhelper::map($file,'id','asset');
 
 $file = InvoicePerformance::find()->orderBy(['customer_name'=>SORT_ASC])->distinct()->all();
