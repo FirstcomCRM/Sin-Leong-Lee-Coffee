@@ -102,7 +102,6 @@ class ExpensesController extends Controller
             $month =  Yii::$app->request->post('month');
             $model->file = UploadedFile::getInstance($model,'file');
 
-
             if($model->file == null){
 
                 Yii::$app->getSession()->setFlash('error', 'Select excel file');

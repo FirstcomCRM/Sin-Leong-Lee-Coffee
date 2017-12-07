@@ -132,45 +132,27 @@ class InvoicePerformanceSearch extends InvoicePerformance
         $date_to = '';
       }
       if (!empty($this->month_from)) {
-        /*$count = InvoicePerformance::find()->select(['customer_name'])->distinct()
-                      ->andFilterWhere(['between','date',$date_from,$date_to])
-                      ->andFilterWhere(['like', 'customer_name', $this->customer_name])
-                     ->andFilterWhere(['like', 'item_code',$this->item_code])
-                     ->count();*/
-
-         /*$pagination = new Pagination([
-            'defaultPageSize' => 10,
-            'totalCount' => $count
-        ]);*/
 
         $custFileDistinct = InvoicePerformance::find()->select(['customer_name'])->distinct()
                       ->andFilterWhere(['between','date',$date_from,$date_to])
                       ->andFilterWhere(['like', 'customer_name', $this->customer_name])
-                     ->andFilterWhere(['like', 'item_code',$this->item_code])
-                     ->andFilterWhere(['like', 'item_name',$this->item_name])
-                    //  ->offset($pagination->offset)
-                    //  ->limit($pagination->limit)
+                     ->andFilterWhere(['like', 'item_code',$this->item_code])            
+                      ->asArray()
                      ->all();
       }else{
           $custFileDistinct = InvoicePerformance::find()->where(['id'=>0])->all();
       }
 
-      //return $dataProvider;
+
       return $custFileDistinct;
     }
 
     public function perform_list($params){
       $query = InvoicePerformance::find();
 
-      // add conditions that should always apply here
-
       if (!$this->validate()) {
-          // uncomment the following line if you do not want to return any records when validation fails
-          // $query->where('0=1');
-      //    $this->load($params);
-          //return $dataProvider;
-      }
 
+      }
 
        $this->load($params);
 

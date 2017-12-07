@@ -68,13 +68,13 @@ $this->params['breadcrumbs'][] = $this->title;
               }
 
            } ?>
-
+          
            <?php foreach ($custFileDistinct as $key => $value): ?>
              <div class="table-responsive">
                <table class="table table-bordered">
                  <thead>
                    <th></th>
-                   <th style="width:20%"><?php echo $value['customer_name'] ?></th>
+                   <th style="width:20%"><?php echo $value->customer_name ?></th>
                    <?php foreach ($date_contain as $dates): ?>
                      <th>
                        <?php $display_date = date('M-Y',strtotime($dates)); echo $display_date; ?>
@@ -86,20 +86,19 @@ $this->params['breadcrumbs'][] = $this->title;
                  <tbody>
                    <?php $file = InvoicePerformance::find()->select(['item_name','item_code'])->distinct()
                      ->andFilterWhere(['between','date',$date_from,$date_to])
-                     ->andFilterWhere(['like', 'customer_name', $value['customer_name'] ])
+                     ->andFilterWhere(['like', 'customer_name', $value->customer_name])
                      ->andFilterWhere(['like', 'item_code',$searchModel->item_code])
                      ->andFilterWhere(['like', 'item_name',$searchModel->item_name])
-                     ->asArray()
                      ->all();
                     ?>
                     <?php foreach ($file as $key_a => $value_a): ?>
                       <tr>
                         <td style="width:5%"><?php echo $number?></td>
-                        <td style="width:20%"><?php echo $value_a['item_code']. ' - '. $value_a['item_name'] ?></td>
+                        <td style="width:20%"><?php echo $value_a->item_code. ' - '. $value_a->item_name ?></td>
                         <?php foreach ($date_contain as $dates): ?>
                           <?php $date_start = date('Y-m-01',strtotime($dates)); ?>
                           <?php $date_end = date('Y-m-t',strtotime($dates)); ?>
-                          <?php $month_total =  InvoicePerformance::find()->where(['item_code'=>$value_a['item_code'],'item_name'=>$value_a['item_name'], 'customer_name'=>$value['customer_name'] ])
+                          <?php $month_total =  InvoicePerformance::find()->where(['item_code'=>$value_a->item_code,'item_name'=>$value_a->item_name, 'customer_name'=>$value->customer_name])
                                           ->andFilterWhere(['between','date',$date_start,$date_end])
                                           ->sum('quantity'); ?>
                           <td>
@@ -110,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             }?>
                           </td>
                         <?php endforeach; ?>
-                        <?php $total =  InvoicePerformance::find()->where(['item_code'=>$value_a['item_code'],'item_name'=>$value_a['item_name'], 'customer_name'=>$value['customer_name'] ])
+                        <?php $total =  InvoicePerformance::find()->where(['item_code'=>$value_a->item_code,'item_name'=>$value_a->item_name, 'customer_name'=>$value->customer_name])
                                         ->andFilterWhere(['between','date',$date_from,$date_to])
                                         ->sum('quantity'); ?>
                         <td>
@@ -133,6 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
              </div>
 
            <?php endforeach; ?>
+
 
           <?php endif; ?>
 

@@ -62,7 +62,7 @@ class BoilerController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'model_sum'=>$model_sum,
-      
+
         ]);
     }
 
@@ -80,9 +80,7 @@ class BoilerController extends Controller
         $model->purchase_date = date('Y-m-d');
 
         if ($model->load(Yii::$app->request->post())  && $model->save() ) {
-          //if($model->asset_type == 1){
             $this->saveBoiler($model_sum,$model_line,$model);
-        //  }
             Yii::$app->session->setFlash('success', "Boiler Created!");
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -109,13 +107,10 @@ class BoilerController extends Controller
         $model_sum = BoilerSum::find()->where(['boiler_id'=>$id])->one();
         $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
 
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
             Yii::$app->db->createCommand()->delete('boiler_line', ['boiler_id' => $id])->execute();
             $this->saveBoiler($model_sum,$model_line,$model);
-
-
             Yii::$app->session->setFlash('success', "Boiler Updated!");
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

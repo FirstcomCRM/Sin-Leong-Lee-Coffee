@@ -59,10 +59,7 @@ class BoilerController extends Controller
 
         $model_sum = BoilerSum::find()->where(['boiler_id'=>$id])->one();
         $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
-    //    echo '<pre>';
-      //  print_r($model_sum);
-        //echo '</pre>';
-        // /die(0);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
             'model_sum'=>$model_sum,
@@ -104,7 +101,6 @@ class BoilerController extends Controller
               }
             }
 
-
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -127,8 +123,6 @@ class BoilerController extends Controller
         $model = $this->findModel($id);
         $model_sum = BoilerSum::find()->where(['boiler_id'=>$id])->one();
         $model_line = BoilerLine::find()->where(['boiler_id'=>$id])->all();
-
-    //    var_dump($model_line);die();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
           if ($model->asset_type == 1) {

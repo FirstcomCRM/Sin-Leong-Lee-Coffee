@@ -130,9 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
     }
     $total_gross_profit = $list_sale_total - $list_cost_total;
     if(isset($list_all)):
-        /*echo '<pre>';
-            print_r($list_all);
-        echo '</pre>'*/
+
     ?>
     <div class="box box-info">
         <div class="box-header with-border" style="text-align: center;">
@@ -148,7 +146,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 $total_expenses = 0;
                 $total_avg = 0;
 
-
                 foreach ($list_all as $key => $value) {
                     $total_amount += $value['amount'];
                     $total_expenses += $value['expenses'];
@@ -158,7 +155,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 $total_profit = $total_amount-$total_avg;
                 $share = number_format(($total_profit/$total_expenses)*100,2);
             ?>
-
 
             <div>
                 <table class="table table-bordered">

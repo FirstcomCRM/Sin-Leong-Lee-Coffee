@@ -62,7 +62,6 @@ $expense_per = ($gProfit/($aProfit))*100;
 $used_expense = $gProfit/$aProfit;
 //echo $expense_per;
 
-
 //Sum of expense type, administrative cost
 $admin_cost = [];
 $data = AccountList::find()->where(['transaction_group'=>'Administrative Costs'])->asArray()->all();

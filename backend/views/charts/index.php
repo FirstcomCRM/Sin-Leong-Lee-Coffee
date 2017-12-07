@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
       $total_cost = 0;
       $avg_cof = 0;
       $amount = 0;
-    } 
+    }
 
    ?>
 
@@ -60,9 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                'chart' => [
                        'type' => 'bar'
                ],
-              // 'xAxis'=>[
-              //   'categories'=>['test','dollar2'],
-               //],
+    
                'title' => [
                     'text' => 'Gross Profit'
                     ],

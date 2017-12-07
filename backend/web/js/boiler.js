@@ -1,15 +1,8 @@
 //onload document.ready
 $(function() {
 
-  //$('#date_to').change(function(){
-  //    createLine();
-  //console.log('change at dep_rate');
-  //});
-
   $('#depn-rate').change(function(){
       createLine();
-    //  console.log('change at dep_rate');
-    //alert("The text has been changed.");
   });
 
 
@@ -30,7 +23,7 @@ function createLine(){
   var result = moment(end_purchase_date).diff(moment(purchase_date),'months',true);
 
   var depreciate_value = (parseInt(purchase_cost)/(int_depn_rate*12)).toFixed(2);
-  
+
   $('#depreciate >tbody >tr').remove();
   $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
 
@@ -65,10 +58,8 @@ function getYear() {
       depreciate_value = parseFloat(depreciate_value).toFixed(2);
 
       for (var i = year_from; i <= year_to; i++) {
-      //  $('#depreciate > tbody').append('<tr><td>your data1</td><td>your data2</td><td>your data3</td></tr>');
 
         if (i==year_from) {
-        //    $('#depreciate > tbody').append('<tr><td><input type="text" name="test[]" value="'+i+ '">'+i+'</td><td><input type="text" name="dep_value[]" value="'+-depreciate_value+ '">'+'</td><td>'+purchase+'</td></tr>');
         $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+i+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase+ '">'+'</td></tr>');
 
         }else{
@@ -77,8 +68,6 @@ function getYear() {
           $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+i+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+-depreciate_value+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase+ '">'+'</td></tr>');
 
         }
-      //  $('#depreciate > tbody').append('<tr><td>'+i+'</td><td>'+depreciate_value+'</td><td>'+purchase+'</td></tr>');
-
 
       }
       var balance = purchase;

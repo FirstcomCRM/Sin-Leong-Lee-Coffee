@@ -74,7 +74,7 @@ class InvoicePerformanceController extends Controller
           $ym_to = $searchModel->month_to.'-'.$searchModel->year_to;
           $date_from = date('Y-m-01', strtotime($ym_from));
           $date_to = date('Y-m-t', strtotime($ym_to));
-    
+
           $this->layout='reports.php';
           return $this->render('report', [
               'searchModel'=> $searchModel,
@@ -88,41 +88,7 @@ class InvoicePerformanceController extends Controller
               'date_from'=>$date_from
           ]);
         }
-      /*  if(Yii::$app->request->post('search')){
-            $year = Yii::$app->request->post('year');
-            $month =  Yii::$app->request->post('month');
-            $list = $model->performance_list($month,$year);
 
-            return $this->render('index', [
-                'list'=>$list,
-            ]);
-
-        }else if(Yii::$app->request->post('excel')){
-
-            $year = Yii::$app->request->post('year');
-            $month =  Yii::$app->request->post('month');
-            $this->actionExcel($year,$month);
-            //return $this->redirect(['user/index']);
-
-
-        }else if(Yii::$app->request->post('pdf')){
-
-            $year = Yii::$app->request->post('year');
-            $month =  Yii::$app->request->post('month');
-            $this->actionPdf($year,$month);
-
-
-        }else{
-
-            $list = $model->performance_list();
-            $list = null;
-            return $this->render('index', [
-                'list' => $list,
-                'model'=>$model,
-            ]);
-
-
-        }*/
     }
     public function actionExcel($year,$month){
 
@@ -156,10 +122,7 @@ class InvoicePerformanceController extends Controller
             $pdf = $this->render('pdf', $data);
         }
 
-
     }
-
-
 
     protected function findModel($id)
     {

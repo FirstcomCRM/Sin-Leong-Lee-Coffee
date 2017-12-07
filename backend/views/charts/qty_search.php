@@ -62,10 +62,7 @@ $cust = ArrayHelper::map($data,'customer_name','customer_name');
           <?php
            echo $form->field($model, 'customer_name')->widget(Select2::classname(), [
             'data' => $cust,
-            //'value'=> 'st',
-            //'maintainOrder' => true,
-            'options' => ['placeholder' => 'Add customers', 'multiple'=>true, 'required'=>true],
-          //    'options' => ['multiple'=>true, 'required'=>true],
+            'options' => ['placeholder' => 'Add customers', 'multiple'=>true, 'required'=>true],      
             'pluginOptions' => [
               'allowClear' => true
             ],
