@@ -45,11 +45,3 @@ DashboardAsset::register($this);
 </body>
 </html>
 <?php $this->endPage() ?>
-<script type="text/javascript">
-    /*$(function(){
-        $('.treeview').click(function(){
-        $('.treeview.active').removeClass('active');
-        $(this).addClass('active');
-        });
-    });*/
-</script>

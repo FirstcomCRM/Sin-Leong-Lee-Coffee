@@ -202,7 +202,7 @@ DashboardAsset::register($this);
                 <li><a href="<?php echo Url::to(['log-event/index']);?>"><i class="fa fa-circle-o"></i>log Event</a></li>
               </ul>
             </li>--->
-            <li><a href="<?php echo Url::to(['invoice-quantity/index']);?>"><i class="fa fa-circle-o"></i> Customer Quantity</a></li>
+            <li><a href="<?php echo Url::to(['invoice-quantity/index']);?>"><i class="fa fa-circle-o"></i> Monthly Average Report</a></li>
             <li><a href="<?php echo Url::to(['invoice-performance/index']);?>"><i class="fa fa-circle-o"></i> Customer Performance</a></li>
             <li><a href="<?php echo Url::to(['customer/index']);?>"><i class="fa fa-circle-o"></i> Customer</a></li>
             <li><a href="<?php echo Url::to(['boiler/index']);?>"><i class="fa fa-circle-o"></i> Boiler</a></li>
