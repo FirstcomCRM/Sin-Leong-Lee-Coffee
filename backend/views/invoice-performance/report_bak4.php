@@ -57,8 +57,6 @@ foreach ($cost_codes as $value) {
       $cost_total = 0;
 }
 
-
-
 //get the incomve vs cost of goods
 $gProfit = array_sum($sales_income) - array_sum($cost_goods);
 
@@ -76,7 +74,7 @@ $ind = InvoicePerformance::find()->select(['item_name'])->distinct()
       ->orderBy(['item_name'=>SORT_ASC])
       ->all();
 
-
+  
 //Sum of expense type, administrative cost
 $admin_cost = [];
 $data = AccountList::find()->where(['transaction_group'=>'Administrative Costs'])->asArray()->all();
@@ -153,13 +151,6 @@ foreach ($data as $value) {
 }
 
 
-$month_from = $searchModel->month_from;
-$year_from = $searchModel->year_from;
-$month_to = $searchModel->month_to;
-$year_to = $searchModel->year_to;
-$merge_from = $month_from.' '.$year_from;
-$merge_to = $month_to.' '.$year_to;
-
 //$cost_goods = [];
  ?>
 
@@ -175,15 +166,9 @@ $merge_to = $month_to.' '.$year_to;
   .sub-title{
     padding-left: 2em;
   }
-  .sub-title-a{
-    font-weight: bold;
-  }
   .td-left{
     width: 40%;
     border: none;
-  }
-  .td-remain{
-    width: 20%;
   }
   .sub-name{
     padding-left: 4em;
@@ -196,76 +181,55 @@ $merge_to = $month_to.' '.$year_to;
 
 <div class="container">
 
-<p class="cust-name"><h1 style="text-align: center;font-weight:bold;"><?php echo $searchModel->customer_name ?></h1></p>
-
-<?php if ($merge_from == $merge_to): ?>
-  <p class="cust-name"><h3 style="text-align: center;font-weight:bold;"><?php echo $month_from.' '.$year_from ?></h3></p>
-<?php else: ?>
-  <p class="cust-name"><h3 style="text-align: center;font-weight:bold;"><?php echo $merge_from.' - '.$merge_to ?></h3></p>
-<?php endif; ?>
+<p class="cust-name"><h1 style="text-align: center;font-weight:bold;">Sin Leong Lee Coffee Pte Ltd</h1></p>
+<p class="cust-name"><h2 style="text-align: center;font-weight:bold;"><?php echo $searchModel->customer_name ?></h2> </p>
+<p><strong><?php echo date('m/d/Y') ?></strong> </p>
+<p><strong><?php echo date("h:i:sa") ?></strong> </p>
 
 <!---Regarding the formula in the excel file
 total sales amount = amount * quantity
 total cost amount = avg cost * quanty
 --->
-
 <hr style="border-color:black;height:1px">
 <!--Income Table-->
 <table class="table income-table" >
 <tr>
-  <td colspan = "2"><h4>Income</h4></td>
-  <td> <h4>% by income</h4></td>
-  <td><h4>% by GP</h4></td>
+  <td colspan = "2">Income</td>
 </tr>
 <tr>
-  <td colspan = "2"><span class="sub-title sub-title-a">Sales</span></td>
-  <td></td>
-  <td></td>
+  <td colspan = "2"><span class="sub-title">Sales</span></td>
 </tr>
 <tr>
-  <td class="td-left"> <span class="sub-title"></span>Sales Coffee</td>
+  <td class="td-left" > <span class="sub-name"></span>4-1110 Sales Coffee</td>
   <td>
-    <?php echo $sales_income[0] == 0 ? '-':number_format($sales_income[0],2)?>
+    <?php echo '$'.number_format($sales_income[0],2); ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title">Sales Tea</td>
+  <td class="td-left"><span class="sub-name">4-1120  Sales Tea</td>
   <td>
-    <?php echo $sales_income[1] == 0 ? '-':number_format($sales_income[1],2)?>
+      <?php echo '$'.number_format($sales_income[1],2); ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title">Sales Mug & Spoons</td>
+  <td class="td-left"><span class="sub-name">4-1130 Sales Mug & Spoons</td>
   <td>
-    <?php echo $sales_income[2] == 0 ? '-':number_format($sales_income[2],2)?>
+    <?php echo '$'.number_format($sales_income[2],2); ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title">Sales Others</td>
+  <td class="td-left"><span class="sub-name">4-1140 Sales Others</td>
   <td>
-      <?php echo $sales_income[3] == 0 ? '-':number_format($sales_income[3],2)?>
+      <?php echo '$'.number_format($sales_income[3],2); ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
-<tr>
-  <td> <br> </td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
+
 <tr><!--Rebate and Discount row-->
-  <td class="td-left" colspan = 4><span class="sub-title sub-title-a">Rebates & Discount</td>
+  <td class="td-left"><span class="sub-title">Rebates & Discount</td>
 </tr>
 <?php foreach ($rebate_list as $value): ?>
      <tr>
-       <td class="td-left"><span class="sub-title"><?php echo $value->account_details ?></span></td>
+       <td class="td-left"><span class="sub-name"><?php echo $value->account.' '.$value->account_details ?></span></td>
        <td>
          <?php
             $rebate_sum =  RebateReport::find()->where(['account'=>$value->account])
@@ -274,39 +238,40 @@ total cost amount = avg cost * quanty
                       ->sum('amount');
             //echo '($'.abs(number_format($rebate_sum,2)).')';
             $rebate_sum = abs($rebate_sum);
-            echo $rebate_sum == 0 ? '-':'('.number_format($rebate_sum,2). ')';
+            echo '($'.number_format($rebate_sum,2). ')'
           ?>
        </td>
-       <td></td>
-       <td></td>
      </tr>
+
 <?php endforeach; ?>
 
-<?php
-  $rebate_sum =  RebateReport::find() ->where(['customer'=>$searchModel->customer_name])
-             ->andWhere(['between','date',$date_from,$date_to])
-             ->sum('amount');
-     //echo '($'.abs(number_format($rebate_sum,2)).')';
-      $rebate_sum = abs($rebate_sum);
-?>
-
-
 <tr>
-  <td class="td-left"><span class="sub-title"><strong>Total Income</strong></td>
-  <td class="td-remain">
-    <span><strong>
+  <td class="td-left"><span class="sub-title total">Total Rebate and Discount</td>
+  <td>
+    <span class="total">
       <?php
-        $total_income = array_sum($sales_income) - $rebate_sum;
-        echo number_format($total_income,2);
-      ?>
-    </strong></span>
+         $rebate_sum =  RebateReport::find() ->where(['customer'=>$searchModel->customer_name])
+                   ->andWhere(['between','date',$date_from,$date_to])
+                   ->sum('amount');
+         //echo '($'.abs(number_format($rebate_sum,2)).')';
+         $rebate_sum = abs($rebate_sum);
+         echo '($'.number_format($rebate_sum,2). ')'
+       ?>
+    </span>
   </td>
-  <td class="td-remain">100%</td>
-  <td class="td-remain"></td>
 </tr>
 
-<!---get the % by income in total income and cost of Sales--->
-<?php $cost_perc = (array_sum($cost_goods)/$total_income )*100 ?>
+<tr>
+  <td class="td-left"><span class="sub-title total">Total Income</td>
+  <td>
+    <span class="total">
+      <?php
+        $total_income = array_sum($sales_income) - $rebate_sum;
+        echo '$'.number_format($total_income,2);
+      ?>
+    </span>
+  </td>
+</tr>
 
 </table>
 
@@ -314,56 +279,42 @@ total cost amount = avg cost * quanty
 <!--Cost of Sales Table-->
 <table class="table cost-table">
 <tr>
-  <td colspan = "2"><h4>Cost of Sales</h4></td>
-  <td></td>
-  <td></td>
+  <td colspan = "2">Cost of Sales</td>
 </tr>
 <tr>
-  <td colspan = "2"><span class="sub-title"><strong>Cost of Sales</strong></span></td>
-  <td></td>
-  <td></td>
+  <td colspan = "2"><span class="sub-title">Cost of Sales</span></td>
 </tr>
 <tr>
-  <td class="td-left"> <span class="sub-title"></span>Cost of Goods Coffee</td>
+  <td class="td-left"> <span class="sub-name"></span>5-1110 Cost of Goods Coffee</td>
   <td>
-    <?php echo $cost_goods[0] == 0 ? '-':number_format($cost_goods[0],2)?>
+    <?php echo '$'.number_format($cost_goods[0],2) ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title">Cost of Goods Tea</td>
+  <td class="td-left"><span class="sub-name">5-1120 Cost of Goods Tea</td>
   <td>
-    <?php echo $cost_goods[1] == 0 ? '-':number_format($cost_goods[1],2)?>
+    <?php echo '$'.number_format($cost_goods[1],2) ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title">Cost of Goods Mug</td>
+  <td class="td-left"><span class="sub-name">5-1130 Cost of Goods Mug</td>
   <td>
-    <?php echo $cost_goods[2] == 0 ? '-':number_format($cost_goods[2],2)?>
+    <?php echo '$'.number_format($cost_goods[2],2) ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title">Cost of Goods Others</td>
+  <td class="td-left"><span class="sub-name">5-1140 Cost of Goods Others</td>
   <td>
-    <?php echo $cost_goods[3] == 0 ? '-':number_format($cost_goods[3],2)?>
+    <?php echo '$'.number_format($cost_goods[3],2) ?>
   </td>
-  <td></td>
-  <td></td>
 </tr>
 <tr>
-  <td class="td-left"><span class="sub-title"><strong>Total Cost of Sales</strong></td>
-  <td class="td-remain">
-    <span><strong>
-        <?php echo number_format(array_sum($cost_goods),2); ?>
-    </strong> </span>
+  <td class="td-left"><span class="sub-title total">Total Cost of Sales</td>
+  <td>
+    <span class="total">
+        <?php echo '$'.number_format(array_sum($cost_goods),2); ?>
+      </span>
   </td>
-  <td class="td-remain"><?php echo round($cost_perc).'%' ?></td>
-  <td class="td-remain"></td>
 </tr>
 </table>
 
@@ -373,20 +324,18 @@ total cost amount = avg cost * quanty
 <table class="table gross-table">
 
 <tr>
-  <td class="td-left"><span class="total">Gross Profit</span></td><!--Customer gross  profit for months in between--->
-  <td class="td-remain"><span class="total">
+  <td class="td-left"><span class="total">Customer Gross Profit</span></td><!--Customer gross  profit for months in between--->
+  <td><span class="total">
     <?php
       $customer_gross = $gProfit- $rebate_sum;
-      echo number_format($customer_gross,2); ?>
+      echo '$'.number_format($customer_gross,2); ?>
   </span></td>
-  <td class="td-remain"><?php echo 100-round($cost_perc).'%' ?></td>
-  <td class="td-remain">100%</td>
 </tr>
 </table>
 <!--insert here individual expenses-->
 <table class="table individual">
   <tr>
-    <td colspan = "2"><h4>Individual Expenses</h4></td>
+    <td colspan = "2">Individual Expenses</td>
   </tr>
   <?php foreach ($ind as $key => $value): ?>
     <tr>
@@ -407,103 +356,122 @@ total cost amount = avg cost * quanty
        ?>
        <?php endforeach; ?>
        <?php $ind_summation[]=$ind_total ?>
-        <td>
-          <?php echo $ind_total == 0 ? '-':number_format($ind_total,2) ?>
-        </td>
+        <td><?php echo '$'.number_format($ind_total,2) ?></td>
     </tr>
   <?php endforeach; ?>
   <tr>
-    <td class="td-left"><span class="sub-title"><strong>Total Individual Expenses</strong></td>
-    <td class="td-remain">
-      <span><strong>
-        <?php echo array_sum($ind_summation) == 0 ? '-':number_format(array_sum($ind_summation),2) ?>
-      </strong></span>
+    <td class="td-left"><span class="sub-title total">Total Individual Expenses</td>
+    <td>
+      <span class="total">
+          <?php echo '$'.number_format(array_sum($ind_summation),2); ?>
+      </span>
     </td>
-    <td class="td-remain">0.00</td>
-    <td class="td-remain">0.00</td>
   </tr>
 
 </table>
+
+
+<br>
+<!--All Gross Profit Table-->
+<table class="table gross-table">
+  <tr>
+    <td class="td-left"><span class="total">Total Income</span></td>
+    <td><span class="total">
+        <?php $income = array_sum($sales_income)- $rebate_sum;
+          echo '$'.number_format($income,2);
+        ?>
+    </span></td>
+  </tr>
+  <tr>
+    <td class="td-left"><span class="total">Cost of Sales</span></td>
+    <td><span class="total"><?php echo '$'.number_format(array_sum($cost_goods),2 ); ?></span></td>
+  </tr>
+<tr>
+  <td class="td-left"><span class="total">Total Income.</span></td><!--all gross  profit for months in between--->
+  <td>
+    <span class="total">
+      <?php
+      echo '$'.number_format($gProfit,2);
+      ?>
+    </span>
+  </td>
+</tr>
+
 
 <br>
 <!--Cost of Expenses Table-->
 <table class="table expense-table">
   <tr>
-    <td><strong>Shared Expenses (Gross Profit Ratio)</strong></td>
-    <td><strong><?php  echo number_format($expense_per,3).'%';?></strong></td>
-    <td></td>
-    <td></td>
+    <td colspan = "2">Expense</td>
+  </tr>
+  <tr>
+    <td class="td-left" colspan="2"><span class="sub-title">Expense</span></td>
+  </tr>
+  <tr>
+    <td class="td-left"><span class="sub-name">Share Expenses Amount</span></td>
+    <td>
+      <?php
+        $expense = $gProfit/$aProfit;
+        $shared_expense = $excel_expense * $expense;
+        echo '$'.number_format($shared_expense,2);
+      ?>
+    </td>
   </tr>
 
   <tr><!--start of administrative cost---->
     <td class="td-left"><span class="sub-title">Administrative Costs</span></td>
-    <td><?php echo array_sum($admin_cost)== 0? '-':number_format(array_sum($admin_cost),2) ?></td>
-    <td></td>
-    <td></td>
+    <td><?php echo '($'.number_format(array_sum($admin_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($admin_cost)*$used_expense,3) ?></td>
   </tr>
+
 
   <tr><!--start of fixed asset cost---->
       <td class="td-left"><span class="sub-title">Fixed Asset Costs</span></td>
-      <td><?php echo array_sum($fixed_cost)== 0? '-':number_format(array_sum($fixed_cost),2) ?></td>
-      <td></td>
-      <td></td>
+      <td><?php echo '($'.number_format(array_sum($fixed_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($fixed_cost)*$used_expense,3) ?></td>
   </tr><!--end of fixed asset cost---->
 
   <tr><!--start of Utilities Costs---->
       <td class="td-left"><span class="sub-title">Utilities Costs</span></td>
-      <td><?php echo array_sum($util_cost)== 0? '-':number_format(array_sum($util_cost),2) ?></td>
-      <td></td>
-      <td></td>
+      <td><?php echo '($'.number_format(array_sum($util_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($util_cost)*$used_expense,3)  ?></td>
   </tr><!--end of Utilities Costs---->
 
   <tr><!--start of Employment Costs---->
       <td class="td-left"><span class="sub-title">Employment Costs</span></td>
-      <td><?php echo array_sum($employ_cost)== 0? '-':number_format(array_sum($employ_cost),2) ?></td>
-      <td></td>
-      <td></td>
+      <td><?php echo '($'.number_format(array_sum($employ_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($employ_cost)*$used_expense,3) ?></td>
   </tr><!--end of Employment Costs---->
 
   <tr><!--start of Marketing Costs---->
       <td class="td-left"><span class="sub-title">Marketing Costs</span></td>
-      <td><?php echo array_sum($market_cost)== 0? '-':number_format(array_sum($market_cost),2) ?></td>
-      <td></td>
-      <td></td>
+      <td><?php echo '($'.number_format(array_sum($market_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($market_cost)*$used_expense,3) ?></td>
   </tr><!--end of Marketing Costs---->
 
   <tr><!--start of Customer Expenses---->
       <td class="td-left"><span class="sub-title">Customer Expenses</span></td>
-      <td><?php echo array_sum($custom_cost)== 0? '-':number_format(array_sum($custom_cost),2) ?></td>
-      <td></td>
-      <td></td>
+        <td><?php echo '($'.number_format(array_sum($custom_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($custom_cost)*$used_expense,3) ?></td>
   </tr><!--end of Customer Expenses---->
 
   <tr><!--start of Factory Maintenance Costs---->
       <td class="td-left"><span class="sub-title">Factory Maintenance Costs</span></td>
-      <td><?php echo array_sum($fact_cost)== 0? '-':number_format(array_sum($fact_cost),2) ?></td>
-      <td></td>
-      <td></td>
+      <td><?php echo '($'.number_format(array_sum($fact_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($fact_cost)*$used_expense,3) ?></td>
   </tr><!--end of Factory Maintenance Costs---->
+
 
   <tr> <!--start of Motor Vehicle Costs---->
       <td class="td-left"><span class="sub-title">Motor Vehicle Costs</span></td>
-      <td><?php echo array_sum($motor_cost)== 0? '-':number_format(array_sum($motor_cost),2) ?></td>
-      <td></td>
-      <td></td>
+      <td><?php echo '($'.number_format(array_sum($motor_cost),2).')&emsp;&emsp;'.  '$'.number_format(array_sum($motor_cost)*$used_expense,3) ?></td>
   </tr><!--end of Motor Vehicle Costs---->
 
 
 <tr>
-  <td class="td-left"><span class="sub-title"><strong>Total Shared Expenses</strong></span></td>
-  <td class="td-remain">
-    <span><strong>
+  <td class="td-left"><span class="sub-title total">Total Shared Expenses</span></td>
+  <td>
+    <span class="total">
       <?php
         $excel_expense = number_format($excel_expense,2);
-        echo ''.$excel_expense;
+        echo '$'.$excel_expense;
        ?>
-    </strong></span>
+      <?php// edr echo  '$'.number_format($total_expenses,2)?>
+    </span>
   </td>
-  <td class="td-remain">zero</td>
-  <td class="td-remain">zero</td>
 </tr>
 </table>
 
@@ -513,14 +481,46 @@ total cost amount = avg cost * quanty
 <table class="table net-table">
 <tr>
   <td class="td-left"><span class="total">Net Profit</span></td>
-  <td class="td-remain">
+  <td>
     <span class="total">
-      <?php echo number_format($gProfit,2) ?>
+      <?php echo '$'.number_format($gProfit,2) ?>
     </span>
   </td>
-  <td class="td-remain">zero</td>
-  <td class="td-remain">zero</td>
+</tr>
+
+<tr>
+  <td class="td-left"><span class="total">Shared Expense Percentage</span></td>
+  <td>
+    <span class="total">
+      <?php
+        echo number_format($expense_per,3).'%';
+      ?>
+    </span>
+  </td>
 </tr>
 </table>
 
 </div>
+
+<hr>
+
+<table class="table gross-table">
+  <tr>
+    <td class="td-left"><span class="total">Total All Sales Amount</span></td>
+    <td><span class="total"><?php echo '$'.number_format($all,2) ?></span></td>
+  </tr>
+  <tr>
+    <td class="td-left"><span class="total">Total All Cost Amount</span></td>
+    <td><span class="total"><?php echo '$'.number_format($sum_cost,2) ?></span></td>
+  </tr>
+<tr>
+  <td class="td-left"><span class="total">Total All Gross Profit</span></td><!--all gross  profit for months in between--->
+  <td>
+    <span class="total">
+      <?php
+  //    $allProfit = $gProfit - $aProfit;
+      //echo '$'.number_format($aProfit,2);
+      ?>
+    </span>
+  </td>
+</tr>
