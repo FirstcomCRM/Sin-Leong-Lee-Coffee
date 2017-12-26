@@ -38,7 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //    'id',
                 'account',
                 'account_details',
-          
+                'transaction_type',
+                'transaction_group',
                 ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
