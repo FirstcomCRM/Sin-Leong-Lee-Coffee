@@ -19,7 +19,7 @@ $a = 1;
 $date_contain = [];
 $date_compare = null;
 
-$this->title = 'Invoice Quantity';
+$this->title = 'Monthly Average Report';
 $this->params['breadcrumbs'][] = $this->title;
 
 
@@ -81,7 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                      </th>
                    <?php endforeach; ?>
                    <th>Total Qty</th>
-                   <th>Average Percent</th>
+                   <th>Average Monthly Quantity</th>
                  </thead>
                  <tbody>
                    <?php $file = InvoicePerformance::find()->select(['item_name','item_code'])->distinct()
@@ -122,7 +122,7 @@ $this->params['breadcrumbs'][] = $this->title;
                           }
                         ?>
                         </td>
-                        <td><?php echo number_format($total/count($date_contain),2 ).'%' ?></td>
+                        <td><?php echo number_format($total/count($date_contain),2 ) ?></td>
                       </tr>
 
                     <?php $number += 1 ?>
