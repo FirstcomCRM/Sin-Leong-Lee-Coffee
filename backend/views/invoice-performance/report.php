@@ -19,16 +19,18 @@ $excel_expense = Expenses::find()->where(['between','month',$date_from,$date_to]
 $rebate_list = AccountList::find()->where(['transaction_type'=>'Rebate'])->all();
 $all = InvoicePerformance::find()->andFilterwhere(['between', 'date', $date_from,$date_to])->sum('amount');
 $all_cost =  InvoicePerformance::find()->andFilterwhere(['between', 'date', $date_from,$date_to])->all();
+$all_rebates = RebateReport::find()->andFilterWhere(['between', 'date', $date_from,$date_to])->sum('amount');
 
 foreach ($all_cost as $key => $value) {
   $cost = $value->quantity * $value->average_cost;
   $sum_cost += $cost;
 }
-$aProfit = $all-$sum_cost;
+$aProfit = $all-($sum_cost+abs($all_rebates));
 
+print_r($aProfit);
 $sales_codes = ['4-1110','4-1120','4-1130','4-1140'];//Item code for sales coffee, sales tea, sales mug and spoon and sales others
-$cost_codes = ['5-1110','5-1120','5-1130','5-1140'];//Item code for cost of goods coffee, cost of goods tea, cost of goods mug and spoon and cost of goods others
-
+//$cost_codes = ['5-1110','5-1120','5-1130','5-1140'];//Item code for cost of goods coffee, cost of goods tea, cost of goods mug and spoon and cost of goods others
+$cost_codes = ['5-1110','5-1120','5-1130','5-1140','5-1150','5-1160','5-1170'];
 //Sum of sales income based on the sales code. [0]=sales coffee, [1]=sales tea, [2]=sales mug and spoon, [3]= sales others
 $sales_income = [];
 foreach ($sales_codes as  $value) {
@@ -63,8 +65,8 @@ foreach ($cost_codes as $value) {
 $gProfit = array_sum($sales_income) - array_sum($cost_goods);
 
 //get the shared expense percentage value
-$expense_per = ($gProfit/($aProfit))*100;
-$used_expense = $gProfit/$aProfit;
+$expense_per = ($gProfit/($aProfit-abs($all_rebates)))*100;
+$used_expense = $gProfit/($aProfit-abs($all_rebates));
 //echo $expense_per;
 
 //Invidiual expenses area
@@ -502,8 +504,8 @@ total cost amount = avg cost * quanty
        ?>
     </strong></span>
   </td>
-  <td class="td-remain">zero</td>
-  <td class="td-remain">zero</td>
+  <td class="td-remain">0%</td>
+  <td class="td-remain">0%</td>
 </tr>
 </table>
 
@@ -518,9 +520,192 @@ total cost amount = avg cost * quanty
       <?php echo number_format($gProfit,2) ?>
     </span>
   </td>
-  <td class="td-remain">zero</td>
-  <td class="td-remain">zero</td>
+  <td class="td-remain">0%</td>
+  <td class="td-remain">0%</td>
 </tr>
 </table>
 
 </div>
+
+
+<hr>
+
+<table class="table gross-table">
+  <tr>
+    <td class="td-left"><span class="total">Total All Sales Amount</span></td>
+    <td><span class="total"><?php echo '$'.number_format($all,2) ?></span></td>
+  </tr>
+  <tr>
+    <td class="td-left"><span class="total">Total All Cost Amount</span></td>
+    <td><span class="total"><?php echo '$'.number_format($sum_cost,2) ?></span></td>
+  </tr>
+  <tr>
+    <td class="td-left"><span class="total">Total All Rebates</span></td>
+    <td><span class="total"><?php echo '$'.number_format(abs($all_rebates),2) ?></span></td>
+  </tr>
+<tr>
+  <td class="td-left"><span class="total">Total All Gross Profit</span></td><!--all gross  profit for months in between--->
+  <td>
+    <span class="total">
+      <?php
+     $allProfit = $gProfit - ($aProfit);
+      echo '$'.number_format($aProfit,2);
+      ?>
+    </span>
+  </td>
+</tr>
+</table>
+
+<hr>
+
+<?php
+$all_sales_income = [];
+foreach ($sales_codes as  $value) {
+  $all_sales_income[] =  InvoicePerformance::find()->joinWith(['codes'])->andFilterwhere(['between', 'date', $date_from,$date_to])
+                    ->andFilterWhere(['item_list.income'=>$value ])
+                    ->sum('amount');
+}
+
+
+$all_cost_goods = [];
+$all_avg_cost = 0;
+$all_cost_total = 0;
+foreach ($cost_codes as $value) {
+      $all_costs  = InvoicePerformance::find()->joinWith(['codes'])->andFilterwhere(['between', 'date', $date_from,$date_to])
+                   //->andFilterWhere(['customer_name'=>$searchModel->customer_name])
+                   ->andFilterWhere(['item_list.exp_cos'=>$value ])
+                   ->asArray()
+                   ->all();
+      foreach ($all_costs as $key => $value) {
+        if ($value['average_cost']==0) {
+           $all_avg_cost = $value['quantity'] * $value['sales_person'];
+        }else{
+           $all_avg_cost = $value['quantity'] * $value['average_cost'];
+        }
+
+         $all_cost_total += $all_avg_cost;
+      }
+      $all_cost_goods[] =$all_cost_total;
+      $all_avg_cost = 0;
+      $all_cost_total = 0;
+}
+
+ ?>
+
+
+<table class="table">
+  <tr>
+    <td colspan="2">4-1000 SALES</td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>4-110 Sales Coffee</td>
+    <td>  <?php echo $all_sales_income[0] == 0 ? '-':number_format($all_sales_income[0],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>4-1120 Sales Tea</td>
+    <td>  <?php echo $all_sales_income[1] == 0 ? '-':number_format($all_sales_income[1],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>4-1130 Sales Mugs & spoon</td>
+    <td>  <?php echo $all_sales_income[2] == 0 ? '-':number_format($all_sales_income[2],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>4-1140 Sales others</td>
+      <td>  <?php echo $all_sales_income[3] == 0 ? '-':number_format($all_sales_income[3],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>Sales Total</td>
+    <td> <span></span><?php echo number_format(array_sum($all_sales_income),2) ?></td>
+  </tr>
+  <tr>
+    <td colspan="2">4-2000 Rebates & Discount</td>
+  </tr>
+  <?php foreach ($rebate_list as $value): ?>
+       <tr>
+         <td class="td-left"><span class="sub-title"><?php echo $value->account.' '.$value->account_details ?></span></td>
+         <td>
+           <?php
+              $rebate_sum =  RebateReport::find()->where(['account'=>$value->account])
+                      //  ->andWhere(['customer'=>$searchModel->customer_name])
+                        ->andWhere(['between','date',$date_from,$date_to])
+                        ->sum('amount');
+              //echo '($'.abs(number_format($rebate_sum,2)).')';
+              $rebate_sum = abs($rebate_sum);
+              echo $rebate_sum == 0 ? '-':'('.number_format($rebate_sum,2). ')';
+            ?>
+         </td>
+         <td></td>
+         <td></td>
+       </tr>
+  <?php endforeach; ?>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>Rebates Totall</td>
+    <?php $rebate_alls =RebateReport::find()->andWhere(['between','date',$date_from,$date_to])->sum('amount');  ?>
+    <td><?php echo number_format($rebate_alls,2) ?></td>
+  </tr>
+    <td class="td-left"> <span class="sub-title"></span><strong>TOTAL INCOME</strong> </td>
+    <td>
+      <?php $total_inc = array_sum($all_sales_income) - abs($rebate_alls) ?>
+      <?php echo number_format($total_inc,2); ?>
+    </td>
+  <tr>
+    <td colspan="2">5-1000 Cost of Sales</td>
+  </tr>
+  <tr>
+      <td class="td-left"> <span class="sub-title"></span>5-1110 Cost of Goods Coffee</td>
+      <td><?php echo $all_cost_goods[0] == 0 ? '-':number_format($all_cost_goods[0],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>5-1120 Cost of Goods tea</td>
+      <td><?php echo $all_cost_goods[1] == 0 ? '-':number_format($all_cost_goods[1],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>5-1130 Cost of Goods Mugs & Spoon</td>
+      <td><?php echo $all_cost_goods[2] == 0 ? '-':number_format($all_cost_goods[2],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>5-1140 Cost of Goods Others</td>
+      <td><?php echo $all_cost_goods[3] == 0 ? '-':number_format($all_cost_goods[3],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>5-1150 Cost of Goods Others</td>
+      <td><?php echo $all_cost_goods[4] == 0 ? '-':number_format($all_cost_goods[3],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>5-1160 Cost of Goods Others</td>
+      <td><?php echo $all_cost_goods[5] == 0 ? '-':number_format($all_cost_goods[3],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>5-1170 Cost of Goods Others</td>
+      <td><?php echo $all_cost_goods[6] == 0 ? '-':number_format($all_cost_goods[3],2)?></td>
+  </tr>
+  <tr>
+    <td class="td-left"> <span class="sub-title"></span>Total Cost of Sales</td>
+    <td> <?php echo number_format(array_sum($all_cost_goods),2) ?></td>
+  </tr>
+</table>
+
+
+<br>
+<hr>
+<table class="table">
+  <?php
+  $all_costs  = InvoicePerformance::find()->joinWith(['codes'])->andFilterwhere(['between', 'date', $date_from,$date_to])
+               //->andFilterWhere(['customer_name'=>$searchModel->customer_name])
+               ->andFilterWhere(['item_list.exp_cos'=>'5-1110' ])
+               ->asArray()
+               ->all();
+
+   ?>
+  <?php foreach ($all_costs as $key => $value): ?>
+    <tr>
+      <td><?php echo $value['item_name'] ?> </td>
+      <?php $data[] = $value['average_cost']*$value['sales_person'] ?>
+      <td> <?php echo $value['average_cost']*$value['sales_person'] ?></td>
+    </tr>
+  <?php endforeach; ?>
+  <tr>
+    <td>Cost total</td>
+    <td><?php echo array_sum($data) ?></td>
+  </tr>
+</table>

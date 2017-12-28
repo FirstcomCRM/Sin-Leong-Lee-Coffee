@@ -74,7 +74,7 @@ $ind = InvoicePerformance::find()->select(['item_name'])->distinct()
       ->orderBy(['item_name'=>SORT_ASC])
       ->all();
 
-  
+
 //Sum of expense type, administrative cost
 $admin_cost = [];
 $data = AccountList::find()->where(['transaction_group'=>'Administrative Costs'])->asArray()->all();
@@ -524,3 +524,4 @@ total cost amount = avg cost * quanty
     </span>
   </td>
 </tr>
+</table>
