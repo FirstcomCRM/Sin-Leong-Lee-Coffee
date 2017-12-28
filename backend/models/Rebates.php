@@ -82,7 +82,7 @@ class Rebates extends \yii\db\ActiveRecord
           }
 
           $data = $image = substr($rowData[0][2], 0, 2);
-          if ($data == 'CN') {
+          if ($data == 'CN' || $data == 'R1') {
             $rebate = new RebateReport();
             $rebate->customer =   $customer;
             $rebate->rebates_id = $this->id;
