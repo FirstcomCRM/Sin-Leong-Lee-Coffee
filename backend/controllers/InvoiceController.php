@@ -131,7 +131,7 @@ class InvoiceController extends Controller
             ]);
         }
     }
-    
+
     public function ImportExcel($filename,$year,$month){
 
         $inputFile = 'uploads/invoice/'.$filename;
@@ -215,9 +215,10 @@ class InvoiceController extends Controller
                 $invoice_customer->quantity  = (float)$rowData[0][4];
                 $invoice_customer->amount  = (float)$rowData[0][5];
                 preg_match('/([0-9]+\.[0-9]+)/', $rowData[0][7], $matches);
+                preg_match('/([0-9]+\.[0-9]+)/', $rowData[0][6], $edr);//edr
 
                 $invoice_customer->average_cost  = (string)$matches[0];
-                $invoice_customer->job_no  = (string)$rowData[0][8];
+                $invoice_customer->job_no  = (string)$rowData[0][8]; //edr
                 $invoice_customer->sales_person  = (string)$rowData[0][9];
                 $invoice_customer->customer_card_id = (string)$rowData[0][10];
                 $invoice_customer->invoice_item_code = $this->item_code;
@@ -225,6 +226,7 @@ class InvoiceController extends Controller
                 $invoice_customer->item_code = $item_code;
                 $invoice_customer->item_name = $item_name;
                 $invoice_customer->item_abbr = $item_abbr;
+                $invoice_customer->sales_person = (string)$edr[0];//edr
 
                 $invoice_customer->save();
 
