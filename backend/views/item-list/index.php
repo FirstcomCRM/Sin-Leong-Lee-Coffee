@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'item_name',
                 'asset',
                 'income',
-                
+                'exp_cos',
                 ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
