@@ -25,7 +25,8 @@ function createLine(){
   var depreciate_value = (parseInt(purchase_cost)/(int_depn_rate*12)).toFixed(2);
 
   $('#depreciate >tbody >tr').remove();
-  $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
+//  $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
+   $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" readonly name="year_list[]" value="'+purchase_date+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+depreciate_value+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase_cost+ '">'+'</td></tr>');
 
   for (var i = 0; i < result; i++) {
      purchase_cost = purchase_cost - depreciate_value;
@@ -56,11 +57,12 @@ function getYear() {
       var year_amount =year_to - year_from;
       var depreciate_value = dep_amount/(year_to - year_from);
       depreciate_value = parseFloat(depreciate_value).toFixed(2);
-
+      console.log(depreciate_value);
       for (var i = year_from; i <= year_to; i++) {
 
         if (i==year_from) {
         $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+i+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+zero+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase+ '">'+'</td></tr>');
+    //    $('#depreciate > tbody').append('<tr><td><input type="text" class="form-control" name="year_list[]" value="'+i+ '">'+'</td><td><input type="text" class="form-control" name="dep_value[]" value="'+depreciate_value+ '">'+'</td><td><input type="text" class="form-control" name="dep_expense[]" value="'+purchase+ '">'+'</td></tr>');
 
         }else{
           purchase = purchase -depreciate_value;
