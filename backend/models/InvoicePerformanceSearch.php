@@ -19,12 +19,13 @@ class InvoicePerformanceSearch extends InvoicePerformance
      public $month_to;
      public $year_from;
      public $month_from;
+     public $type_l;
 
     public function rules()
     {
         return [
             [['id', 'invoice_id'], 'integer'],
-            [['customer_name', 'invoice_no', 'date', 'average_cost', 'job_no', 'sales_person', 'customer_card_id', 'invoice_item_code','item_code','item_name','item_abbr', 'year_to','month_to','year_from','month_from'], 'safe'],
+            [['customer_name', 'invoice_no', 'date', 'average_cost', 'job_no', 'sales_person', 'customer_card_id', 'invoice_item_code','item_code','item_name','item_abbr', 'year_to','month_to','year_from','month_from','type_l'], 'safe'],
             [['quantity', 'amount'], 'number'],
         //    [['customer_name'],'required']
 
@@ -85,6 +86,7 @@ class InvoicePerformanceSearch extends InvoicePerformance
             ->andFilterWhere(['like', 'item_name',$this->item_name]);
         return $dataProvider;
     }
+
     public function performance_list($month = null,$year = null)
     {
 
@@ -135,8 +137,9 @@ class InvoicePerformanceSearch extends InvoicePerformance
 
         $custFileDistinct = InvoicePerformance::find()->select(['customer_name'])->distinct()
                       ->andFilterWhere(['between','date',$date_from,$date_to])
-                      ->andFilterWhere(['like', 'customer_name', $this->customer_name])
-                     ->andFilterWhere(['like', 'item_code',$this->item_code])            
+                    //  ->andFilterWhere(['like', 'customer_name', $this->customer_name])
+                      ->andFilterWhere(['customer_name'=> $this->customer_name])
+                      ->andFilterWhere(['like', 'item_code',$this->item_code])
                       ->asArray()
                      ->all();
       }else{
@@ -150,14 +153,29 @@ class InvoicePerformanceSearch extends InvoicePerformance
     public function perform_list($params){
       $query = InvoicePerformance::find();
 
+      // add conditions that should always apply here
+
+      $dataProvider = new ActiveDataProvider([
+          'query' => $query,
+      ]);
+
       if (!$this->validate()) {
 
       }
-
        $this->load($params);
 
+       $ym_from = $this->month_from.'-'.$this->year_from;
+       $ym_to = $this->month_to.'-'.$this->year_to;
+       $date_from = date('Y-m-01', strtotime($ym_from));
+       $date_to = date('Y-m-t', strtotime($ym_to));
+
+
+       $query->andFilterWhere(['like', 'customer_name', $this->customer_name])
+              ->andFilterWhere(['between','date',$date_from,$date_to]);
+
+       return $dataProvider;
+
+
     }
-
-
 
 }
