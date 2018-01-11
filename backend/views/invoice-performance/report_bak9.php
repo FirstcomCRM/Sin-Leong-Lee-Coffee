@@ -37,9 +37,8 @@ $kg = 95742;
 $net_profit = 0;
 $logic = null;
 $shared = 0;
-$shared_expenses_total = [];
-$shared_expense = 0;
-$gp_leong = 0;
+
+
 
 if ($searchModel->type_l == 'Coffee') {
   $logic = true;
@@ -51,7 +50,7 @@ $excel_expense = Expenses::find()->where(['between','month',$date_from,$date_to]
 $rebate_list = AccountList::find()->where(['transaction_type'=>'Rebate'])->orderBy(['account'=>SORT_ASC])->asArray()->all();
 $all = InvoicePerformance::find()->andFilterwhere(['between', 'date', $date_from,$date_to])->sum('amount');
 $all_cost =  InvoicePerformance::find()->andFilterwhere(['between', 'date', $date_from,$date_to])->all();
-$all_rebates = RebateReport::find()->andFilterWhere(['between', 'date', $date_from,$date_to])->sum('amount');
+//$all_rebates = RebateReport::find()->andFilterWhere(['between', 'date', $date_from,$date_to])->sum('amount');
 
 
 foreach ($all_cost as $key => $value) {
@@ -128,10 +127,87 @@ $boiler = BoilerLine::find()->where(['customer_name'=>$searchModel->customer_nam
               ->andFilterWhere(['between','date_from',$date_from,$date_to])
               ->sum('dep_amount');
 
-//extract all shared expenses
-$transact =AccountList::find()->select('transaction_group')->where(['<>','transaction_group',''])->distinct()->asArray()->all();
 
-//$total_shared = array_sum($admin_cost)+array_sum($fixed_cost)+array_sum($util_cost)+array_sum($employ_cost)+array_sum($market_cost)+array_sum($custom_cost)+array_sum($fact_cost)+array_sum($motor_cost);
+//Sum of expense type, administrative cost
+$admin_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Administrative Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $admin_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+
+//Sum of expense type, Fixed asset cost_total
+$fixed_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Fixed Asset Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $fixed_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+//Sum of expense type, Utilities Costs
+$util_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Utilities Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $util_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+
+//Sum of expense type, employement cost_total
+$employ_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Employment Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $employ_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+//Sum of expense type, Marketing Costs
+$market_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Marketing Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $market_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+//Sum of expense type, Customer Expenses
+$custom_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Customer Expenses'])->asArray()->all();
+foreach ($data as $value) {
+  $custom_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+//sum of expene type, Factory maintenance cost
+$fact_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Factory Maintenance Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $fact_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+
+//sum of expense type, motor vehicle cost_total
+$motor_cost = [];
+$data = AccountList::find()->where(['transaction_group'=>'Motor Vehicle Costs'])->asArray()->all();
+foreach ($data as $value) {
+  $motor_cost[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
+                ->andWhere(['between','date_uploaded',$date_from,$date_to])
+                ->sum('debit');
+}
+
+
+
+
+$total_shared = array_sum($admin_cost)+array_sum($fixed_cost)+array_sum($util_cost)+array_sum($employ_cost)+array_sum($market_cost)+array_sum($custom_cost)+array_sum($fact_cost)+array_sum($motor_cost);
+
 
 $month_from = $searchModel->month_from;
 $year_from = $searchModel->year_from;
@@ -181,14 +257,11 @@ $month_interval = $interval->m+($interval->y * 12)+1;
     font-weight: bold;
     text-decoration: underline;
   }
-  .t-headers{
-    color:blue;
-  }
 </style>
 
 <div class="container-fluid">
 
-
+<?php echo $total_income ?>
 <p class="cust-name"><h1 style="text-align: center;font-weight:bold;"><?php echo $searchModel->customer_name ?></h1></p>
 
 <?php if ($merge_from == $merge_to): ?>
@@ -198,36 +271,17 @@ $month_interval = $interval->m+($interval->y * 12)+1;
 <?php endif; ?>
 
 
-<!---
-total sales: <?php echo $all ?>
-<br>
-total rebates: <?php echo $all_rebates ?>
-<br>
-total income(total sales - total rebates): <?php echo $all + $all_rebates ?>
-<br>
-total cost of sales: <?php echo $sum_cost ?>
-<br>
-Gross profit all:
-<?php
-
-$gp_leong = ($all+$all_rebates)-$sum_cost;
-echo $gp_leong ?>
-<br>
-shared percentage all:<?php $test ?>
-
---->
-<br>
 <hr style="border-color:black;height:1px">
 
   <table class="table table-bordered">
     <thead>
       <th></th>
       <th></th>
-      <th class="t-headers"> Amount </th>
-      <th class="t-headers"> Average per mth </th>
-      <th class="t-headers">% by ALL GP</th>
-      <th class="t-headers">% by Coffee GP</th>
-      <th class="t-headers"> Amount by 9kg </th>
+      <th> Yearly Amount </th>
+      <th> Average per mth </th>
+      <th>% by ALL GP</th>
+      <th>% by Coffee GP</th>
+      <th> Amount by 9kg </th>
     </thead>
     <tr>
       <td colspan = "2"><span class="column-head"> Income</span></td>
@@ -603,7 +657,6 @@ shared percentage all:<?php $test ?>
       <td></td>
       <td></td>
     </tr><!--empty space between datas-->
-
     <?php if ($searchModel->type_l == 'Coffee'): ?>
       <tr>
         <td></td>
@@ -616,14 +669,7 @@ shared percentage all:<?php $test ?>
           <strong> <?php echo $gross_coffee/$month_interval==0?'-':number_format($gross_coffee/$month_interval,2) ?></strong>
         </td>
         <td></td>
-        <td>
-          <?php if ($income_coffee != 0): ?>
-            <?php $gp_coffee_per = ($gross_coffee/$income_coffee)*100 ?>
-            <?php echo number_format($gp_coffee_per,2).'%' ?>
-          <?php else: ?>
-            <?php echo number_format(0,2).'%' ?>
-          <?php endif; ?>
-        </td>
+        <td>0</td>
         <td>
           <strong><?php echo $gross_coffee/$kg=='0'? '-':number_format($gross_coffee/$kg,3) ?></strong>
         </td>
@@ -641,17 +687,9 @@ shared percentage all:<?php $test ?>
         </td>
         <td></td>
         <td>
-          <?php if ($income_tea != 0): ?>
-            <?php $gp_coffee_per = ($gross_tea/$income_tea)*100 ?>
-            <?php echo number_format($gp_coffee_per,2).'%' ?>
-          <?php else: ?>
-            <?php echo number_format(0,2).'%' ?>
-          <?php endif; ?>
-        </td>
-        <td>
           <strong><?php echo $gross_tea/$kg=='0'? '-':number_format($gross_tea/$kg,3) ?></strong>
         </td>
-
+        <td></td>
       </tr>
     <?php else: ?>
       <tr>
@@ -665,14 +703,7 @@ shared percentage all:<?php $test ?>
           <strong> <?php echo $gross_coffee/$month_interval==0?'-':number_format($gross_coffee/$month_interval,2) ?></strong>
         </td>
         <td></td>
-        <td>
-          <?php if ($income_coffee != 0): ?>
-            <?php $gp_coffee_per = ($gross_coffee/$income_coffee)*100 ?>
-            <?php echo number_format($gp_coffee_per,2).'%' ?>
-          <?php else: ?>
-            <?php echo number_format(0,2).'%' ?>
-          <?php endif; ?>
-        </td>
+        <td>0</td>
         <td>
           <strong><?php echo $gross_coffee/$kg=='0'? '-':number_format($gross_coffee/$kg,3) ?></strong>
         </td>
@@ -689,20 +720,11 @@ shared percentage all:<?php $test ?>
         </td>
         <td></td>
         <td>
-          <?php if ($income_tea != 0): ?>
-            <?php $gp_coffee_per = ($gross_tea/$income_tea)*100 ?>
-            <?php echo number_format($gp_coffee_per,2).'%' ?>
-          <?php else: ?>
-            <?php echo number_format(0,2).'%' ?>
-          <?php endif; ?>
-        </td>
-        <td>
           <strong><?php echo $gross_tea/$kg=='0'? '-':number_format($gross_tea/$kg,3) ?></strong>
         </td>
-
+        <td></td>
       </tr>
     <?php endif; ?>
-
     <tr>
       <td></td>
       <td><strong>Gross Profit - All</strong></td>
@@ -716,7 +738,7 @@ shared percentage all:<?php $test ?>
       <td>
         <strong><?php echo number_format(100.00-$cost_gp,2).'%' ?></strong>
       </td>
-      <td></td>
+      <td>0</td>
       <td><strong><?php echo $gross_all/$kg=='0'? '-':number_format($gross_all/$kg,3) ?></strong></td>
     </tr>
     <tr><!--empty space between datas-->
@@ -760,26 +782,11 @@ shared percentage all:<?php $test ?>
         <td> <?php echo $value['item_name'] ?></td>
         <td>
             <?php echo $ind_total == 0 ? '-':number_format($ind_total,2) ?>
-
         </td>
-        <td>
-          <?php echo $ind_total/$month_interval==0?'-':number_format($ind_total/$month_interval,2) ?>
-        </td>
-        <td>
-          <?php echo $ind_total/$gross_all==0?'-':number_format($ind_total/$gross_all,2).'%' ?>
-        </td>
-        <td>
-          <?php if ($gross_coffee != 0): ?>
-            <?php $gp_coffee_per = ($ind_total/$gross_coffee)*100 ?>
-            <?php echo number_format($gp_coffee_per,2).'%' ?>
-          <?php else: ?>
-            <?php echo number_format(0,2).'%' ?>
-          <?php endif; ?>
-        </td>
-        <td>
-          <?php echo $ind_total/$kg=='0'? '-':number_format($non_invoice /$kg,3) ?>
-        </td>
-        <?php $ind_total = 0; ?>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
       </tr>
     <?php endforeach; ?>
       <!--Insert here for the loop sequence-->
@@ -801,7 +808,9 @@ shared percentage all:<?php $test ?>
               ->andFilterWhere(['between','date',$date_from,$date_to])
               ->sum('expenses');
           $non_invoice_amount[] = $non_invoice;
+
          ?>
+
          <?php if (!empty($non_invoice) ): ?>
            <td></td>
            <td><?php echo $value['asset'] ?> </td>
@@ -814,14 +823,7 @@ shared percentage all:<?php $test ?>
            <td>
              <?php echo $non_invoice /$gross_all==0?'-':number_format( ($non_invoice /$gross_all)*100,2 ).'%' ?>
            </td>
-           <td>
-               <?php if ($gross_coffee != 0): ?>
-                <?php $gp_coffee_per = ($non_invoice/$gross_coffee)*100 ?>
-                <?php echo number_format($gp_coffee_per,2).'%' ?>
-              <?php else: ?>
-                <?php echo number_format(0,2).'%' ?>
-              <?php endif; ?>
-           </td>
+           <td>0</td>
            <td>
              <?php echo $non_invoice /$kg=='0'? '-':number_format($non_invoice /$kg,3) ?>
            </td>
@@ -851,14 +853,7 @@ shared percentage all:<?php $test ?>
       <td>
         <?php echo $boiler/$gross_all==0?'-':number_format( ($boiler/$gross_all)*100,2 ).'%' ?>
       </td>
-      <td>
-        <?php if ($gross_coffee != 0): ?>
-          <?php $gp_coffee_per = ($boiler/$gross_coffee)*100 ?>
-          <?php echo number_format($gp_coffee_per,2).'%' ?>
-        <?php else: ?>
-          <?php echo number_format(0,2).'%' ?>
-        <?php endif; ?>
-      </td>
+      <td>0</td>
       <td>
         <?php echo $boiler/$kg=='0'? '-':number_format($boiler/$kg,3) ?>
       </td>
@@ -878,18 +873,9 @@ shared percentage all:<?php $test ?>
       <td>
         <strong><?php echo $individual_customer_expense/$gross_all==0?'-':number_format( ($individual_customer_expense/$gross_all)*100,2 ).'%' ?></strong>
       </td>
+      <td>0</td>
       <td>
-        <?php if ($gross_coffee != 0): ?>
-          <?php $gp_coffee_per = ($individual_customer_expense/$gross_coffee)*100 ?>
-          <strong><?php echo number_format($gp_coffee_per,2).'%' ?></strong>
-        <?php else: ?>
-          <strong><?php echo number_format(0,2).'%' ?></strong>
-        <?php endif; ?>
-      </td>
-      <td>
-        <strong>
-          <?php echo $individual_customer_expense/$kg=='0'? '-':number_format($individual_customer_expense/$kg,3) ?>
-        </strong>
+        <?php echo $individual_customer_expense/$kg=='0'? '-':number_format($individual_customer_expense/$kg,3) ?>
       </td>
     </tr>
     <tr>
@@ -900,50 +886,187 @@ shared percentage all:<?php $test ?>
       <td></td>
       <td></td>
     </tr>
-    <!--start loop sequence herer /edr-->
-    <?php foreach ($transact as $key => $value): ?>
-      <tr>
-        <td></td>
-        <?php $account_codes = AccountList::find()->where(['transaction_group'=>$value])->asArray()->all(); ?>
-        <?php $sums = [] ?>
-        <?php foreach ($account_codes as $key => $value): ?>
-          <?php $sums[] = ExpensesReport::find()->where(['id_code'=>$value['account']])
-                  ->andWhere(['between','date_uploaded',$date_from,$date_to])
-                  ->sum('debit'); ?>
-        <?php endforeach; ?>
-        <td>
-          <?php echo $value['transaction_group']?>
-          <!---<span> <?php echo str_repeat("&nbsp",20).number_format(array_sum($sums),2) ?></span>--->
-        </td>
-        <td>
-          <?php //$shared = (array_sum($sums)/$gross_all)/10000 ?>
-          <?php $shared = array_sum($sums)/$gp_leong?>
-          <?php $shared_expense = $gross_all*$shared ?>
-          <?php $shared_expenses_total[] =  $shared_expense?>
-          <?php echo number_format($shared_expense,2) ?>
-          <br>
+    <tr>
+      <td></td>
+      <td>Administrative Costs -   <?php echo array_sum($admin_cost)== 0? '-':number_format(array_sum($admin_cost),2) ?><br></td>
+      <td>
+        <?php// $shared = array_sum($admin_cost)/$gross_all ?>
+        <?php $shared = (array_sum($admin_cost)/$gross_all)/100 ?><br>
+  
+        <?php //echo array_sum($admin_cost)== 0? '-':number_format(array_sum($admin_cost),2) ?>
+        <?php echo array_sum($admin_cost)== 0? '-':number_format(array_sum($admin_cost)*$shared,2) ?>
+     </td>
+      <td>
+        <?php echo array_sum($admin_cost)/$month_interval == 0? '-':number_format((array_sum($admin_cost)*$shared )/$month_interval,2) ?>
+        <?php// echo array_sum($admin_cost)/$month_interval == 0? '-':number_format(array_sum($admin_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($admin_cost)/$gross_all==0?'-':number_format( ((array_sum($admin_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php //echo array_sum($admin_cost)/$gross_all==0?'-':number_format( (array_sum($admin_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+        <?php echo array_sum($admin_cost) /$kg=='0'? '-':number_format((array_sum($admin_cost)*$shared)/$kg,3) ?>
+        <?php //echo array_sum($admin_cost)/$kg=='0'? '-':number_format(array_sum($admin_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Fixed Asset Costs - <?php echo array_sum($fixed_cost)== 0? '-':number_format(array_sum($fixed_cost),2) ?></td>
+      <td>
+        <?php $shared = array_sum($fixed_cost)/$gross_all ?>
+        <?php echo array_sum($fixed_cost)== 0? '-':number_format(array_sum($fixed_cost)*$shared,2) ?>
+        <?php //echo array_sum($fixed_cost)== 0? '-':number_format(array_sum($fixed_cost),2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($fixed_cost)/$month_interval == 0? '-':number_format((array_sum($fixed_cost)*$shared )/$month_interval,2) ?>
+        <?php //echo array_sum($fixed_cost)/$month_interval == 0? '-':number_format(array_sum($fixed_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($fixed_cost)/$gross_all==0?'-':number_format( ((array_sum($fixed_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php //echo array_sum($fixed_cost)/$gross_all==0?'-':number_format( (array_sum($fixed_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+        <?php echo array_sum($fixed_cost) /$kg=='0'? '-':number_format((array_sum($fixed_cost)*$shared)/$kg,3) ?>
+        <?php //echo array_sum($fixed_cost)/$kg=='0'? '-':number_format(array_sum($fixed_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Utilities Costs - <?php echo array_sum($util_cost)== 0? '-':number_format(array_sum($util_cost),2) ?></td>
+      <td>
+        <?php $shared = array_sum($util_cost)/$gross_all ?>
+        <?php echo array_sum($util_cost)== 0? '-':number_format(array_sum($util_cost)*$shared,2) ?>
+        <?php// echo array_sum($util_cost)== 0? '-':number_format(array_sum($util_cost),2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($util_cost)/$month_interval == 0? '-':number_format((array_sum($util_cost)*$shared )/$month_interval,2) ?>
+        <?php //echo array_sum($util_cost)/$month_interval == 0? '-':number_format(array_sum($util_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($util_cost)/$gross_all==0?'-':number_format( ((array_sum($util_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php //echo array_sum($util_cost)/$gross_all==0?'-':number_format( (array_sum($util_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+        <?php echo array_sum($util_cost) /$kg=='0'? '-':number_format((array_sum($util_cost)*$shared)/$kg,3) ?>
+        <?php //echo array_sum($util_cost)/$kg=='0'? '-':number_format(array_sum($util_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+        <?php $shared = (array_sum($employ_cost)/$gross_all)/100 ?>
+      <td></td>
+      <td>Employment Costs - <?php echo array_sum($employ_cost)== 0? '-':number_format(array_sum($employ_cost),2) ?> - <?php echo $shared/100 ?></td>
+      <td>
 
-        </td>
-        <td>
-          <?php echo number_format(($shared_expense/$month_interval),2) ?>
-        </td>
-        <td>
-          <?php echo number_format($shared*100,2).'%' ?>
-        </td>
-        <td>
-          <?php if ($gross_coffee != 0): ?>
-            <?php $gp_coffee_per = ($shared_expense/$gross_coffee)*100 ?>
-            <?php echo number_format($gp_coffee_per,2).'%' ?>
-          <?php else: ?>
-            <?php echo number_format(0,2).'%' ?>
-          <?php endif; ?>
-        </td>
-        <td><?php echo number_format(($shared_expense/$kg),3) ?></td>
-      </tr>
-    <?php endforeach; ?>
+        <?php echo $shared; ?><br>
+        <?php echo array_sum($employ_cost)== 0? '-':number_format(array_sum($employ_cost)*$shared,2) ?>
+        <?php// echo array_sum($employ_cost)== 0? '-':number_format(array_sum($employ_cost),2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($employ_cost)/$month_interval == 0? '-':number_format((array_sum($employ_cost)*$shared )/$month_interval,2) ?>
+        <?php// echo array_sum($employ_cost)/$month_interval == 0? '-':number_format(array_sum($employ_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($employ_cost)/$gross_all==0?'-':number_format( ((array_sum($employ_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php// echo array_sum($employ_cost)/$gross_all==0?'-':number_format( (array_sum($employ_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+        <?php echo array_sum($employ_cost) /$kg=='0'? '-':number_format((array_sum($employ_cost)*$shared)/$kg,3) ?>
+        <?php// echo array_sum($employ_cost)/$kg=='0'? '-':number_format(array_sum($employ_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Marketing Costs - <?php echo array_sum($market_cost)== 0? '-':number_format(array_sum($market_cost),2) ?></td>
+      <td>
+        <?php $shared = array_sum($market_cost)/$gross_all ?>
+        <?php echo array_sum($market_cost)== 0? '-':number_format(array_sum($market_cost)*$shared,2) ?>
+        <?php //echo array_sum($market_cost)== 0? '-':number_format(array_sum($market_cost),2) ?>
+       </td>
+      <td>
+        <?php echo array_sum($market_cost)/$month_interval == 0? '-':number_format((array_sum($market_cost)*$shared )/$month_interval,2) ?>
+        <?php //echo array_sum($market_cost)/$month_interval == 0? '-':number_format(array_sum($market_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($market_cost)/$gross_all==0?'-':number_format( ((array_sum($market_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php// echo array_sum($market_cost)/$gross_all==0?'-':number_format( (array_sum($market_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+        <?php echo array_sum($market_cost) /$kg=='0'? '-':number_format((array_sum($market_cost)*$shared)/$kg,3) ?>
+        <?php //echo array_sum($market_cost)/$kg=='0'? '-':number_format(array_sum($market_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Customer Expenses - <?php echo array_sum($custom_cost)== 0? '-':number_format(array_sum($custom_cost),2) ?></td>
+      <td>
+        <?php $shared = array_sum($custom_cost)/$gross_all ?>
 
-    <!--end loop sequence here-->
-
+        <?php echo array_sum($custom_cost)== 0? '-':number_format(array_sum($custom_cost)*$shared,2) ?>
+        <?php //echo array_sum($custom_cost)== 0? '-':number_format(array_sum($custom_cost),2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($custom_cost)/$month_interval == 0? '-':number_format((array_sum($custom_cost)*$shared )/$month_interval,2) ?>
+        <?php //echo array_sum($custom_cost)/$month_interval == 0? '-':number_format(array_sum($custom_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($custom_cost)/$gross_all==0?'-':number_format( ((array_sum($custom_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php //echo array_sum($custom_cost)/$gross_all==0?'-':number_format( (array_sum($custom_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+          <?php echo array_sum($custom_cost) /$kg=='0'? '-':number_format((array_sum($custom_cost)*$shared)/$kg,3) ?>
+          <?php //echo array_sum($custom_cost)/$kg=='0'? '-':number_format(array_sum($custom_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Factory Maintenance Costs -   <?php echo array_sum($fact_cost)== 0? '-':number_format(array_sum($fact_cost),2) ?></td>
+      <td>
+        <?php $shared = array_sum($fact_cost)/$gross_all ?>
+        <?php echo array_sum($fact_cost)== 0? '-':number_format(array_sum($fact_cost)*$shared,2) ?>
+        <?php// echo array_sum($fact_cost)== 0? '-':number_format(array_sum($fact_cost),2) ?>
+      </td>
+      <td>
+          <?php echo array_sum($fact_cost)/$month_interval == 0? '-':number_format((array_sum($fact_cost)*$shared )/$month_interval,2) ?>
+          <?php// echo array_sum($fact_cost)/$month_interval == 0? '-':number_format(array_sum($fact_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($fact_cost)/$gross_all==0?'-':number_format( ((array_sum($fact_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php //echo array_sum($fact_cost)/$gross_all==0?'-':number_format( (array_sum($fact_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+          <?php echo array_sum($fact_cost) /$kg=='0'? '-':number_format((array_sum($fact_cost)*$shared)/$kg,3) ?>
+          <?php// echo array_sum($fact_cost)/$kg=='0'? '-':number_format(array_sum($fact_cost)/$kg,3) ?>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Motor Vehicle Costs -   <?php echo array_sum($motor_cost)== 0? '-':number_format(array_sum($motor_cost),2) ?></td>
+      <td>
+        <?php $shared = array_sum($motor_cost)/$gross_all ?>
+        <?php echo array_sum($motor_cost)== 0? '-':number_format(array_sum($motor_cost)*$shared,2) ?>
+        <?php// echo array_sum($motor_cost)== 0? '-':number_format(array_sum($motor_cost),2) ?>
+      </td>
+      <td>
+          <?php echo array_sum($motor_cost)/$month_interval == 0? '-':number_format((array_sum($motor_cost)*$shared )/$month_interval,2) ?>
+          <?php// echo array_sum($motor_cost)/$month_interval == 0? '-':number_format(array_sum($motor_cost)/$month_interval,2) ?>
+      </td>
+      <td>
+        <?php echo array_sum($motor_cost)/$gross_all==0?'-':number_format( ((array_sum($motor_cost)*$shared )/$gross_all)*100,2 ).'%' ?>
+        <?php// echo array_sum($motor_cost)/$gross_all==0?'-':number_format( (array_sum($motor_cost)/$gross_all)*100,2 ).'%' ?>
+      </td>
+      <td>0</td>
+      <td>
+          <?php echo array_sum($motor_cost) /$kg=='0'? '-':number_format((array_sum($motor_cost)*$shared)/$kg,3) ?>
+          <?php// echo array_sum($motor_cost)/$kg=='0'? '-':number_format(array_sum($motor_cost)/$kg,3) ?>
+      </td>
+    </tr>
     <tr>
       <td colspan=2 class="column-head"> Shared Expenses (Others)  </td>
       <td></td>
@@ -965,26 +1088,17 @@ shared percentage all:<?php $test ?>
       <td></td>
       <td><strong>Total Shared Expenses</strong> </td>
       <td>
-        <strong><?php echo number_format(array_sum($shared_expenses_total),2) ?></strong>
+        <strong><?php echo $total_shared==0?'-':number_format($total_shared,2) ?></strong>
       </td>
       <td>
-        <strong><?php echo number_format(array_sum($shared_expenses_total)/$month_interval,2) ?> </strong>
+        <strong><?php echo $total_shared/$month_interval==0?'-':number_format($total_shared/$month_interval,2) ?> </strong>
       </td>
       <td>
-        <?php //$shared = (array_sum($sums)/$gross_all)/100 ?>
-        <?php $test = (array_sum($shared_expenses_total)/$gross_all)*100 ?>
-        <?php echo number_format($test,2).'%' ?>
+        <?php echo $total_shared/$gross_all==0?'-':number_format( ($total_shared/$gross_all)*100,2 ).'%' ?>
       </td>
+      <td>0</td>
       <td>
-        <?php if ($gross_coffee != 0): ?>
-          <?php $gp_coffee_per = (array_sum($shared_expenses_total)/$gross_coffee)*100 ?>
-          <?php echo number_format($gp_coffee_per,2).'%' ?>
-        <?php else: ?>
-          <?php echo number_format(0,2).'%' ?>
-        <?php endif; ?>
-      </td>
-      <td>
-        <strong> <?php echo number_format(array_sum($shared_expenses_total)/$kg,3) ?>  </strong></td>
+        <strong> <?php echo $total_shared/$kg=='0'? '-':number_format($total_shared/$kg,3) ?>  </td></strong>
     </tr>
     <tr><!--empty space between datas-->
       <td></td>
@@ -998,36 +1112,19 @@ shared percentage all:<?php $test ?>
     <tr>
       <td colspan="2"><h4>Net Profit</h4> </td>
       <td>
-        <?php $net_profit = $gross_all-($individual_customer_expense + array_sum($shared_expenses_total)) ?>
-        <h4><?php echo number_format($net_profit,2) ?></h4>
+        <?php $net_profit = $gross_all-($individual_customer_expense + $total_shared) ?>
+        <h4><?php echo number_format($net_profit) ?></h4>
       </td>
       <td>
         <h4><?php echo number_format($net_profit/$month_interval,2) ?></h4>
       </td>
       <td>
-        <?php $shared = ($net_profit/$gross_all)/100 ?>
-        <h4><?php echo number_format($shared,2).'%' ?></h4>
+        <h4><?php echo number_format(($net_profit/$gross_all)*100,2).'%' ?></h4>
       </td>
-      <td>
-        <?php if ($gross_coffee != 0): ?>
-          <?php $gp_coffee_per = ($net_profit/$gross_coffee)*100 ?>
-          <h4><?php echo number_format($gp_coffee_per,2).'%' ?></h4>
-        <?php else: ?>
-          <h4><?php echo number_format(0,2).'%' ?></h4>
-        <?php endif; ?>
-      </td>
+      <td>0</td>
       <td>
         <h4><?php echo number_format($net_profit/$kg,3) ?></h4>
       </td>
     </tr>
-
-  </table>
-
-
-<?php
-  $data_test = 'AccountList';
- ?>
-  <hr><br>
-  <table class="table">
 
   </table>

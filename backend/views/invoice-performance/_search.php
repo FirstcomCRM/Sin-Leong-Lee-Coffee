@@ -32,6 +32,12 @@ $years = array_combine($year_a,$year_b);
 $data = InvoicePerformance::find()->select(['customer_name'])->orderBy(['customer_name'=>SORT_ASC])->all();
 $cust = ArrayHelper::map($data,'customer_name','customer_name');
 
+$type = [
+  'Both'=>'Both',
+  'Coffee'=>'Coffee',
+  'Tea'=>'Tea',
+]
+
 ?>
 
 <div class="invoice-performance-search">
@@ -58,6 +64,9 @@ $cust = ArrayHelper::map($data,'customer_name','customer_name');
     <div class="row">
       <div class="col-md-3">
           <?php echo $form->field($model,'customer_name')->dropDownList($cust) ?>
+      </div>
+      <div class="col-md-3">
+          <?php echo $form->field($model,'type_l')->dropDownList($type)->label('Type') ?>
       </div>
     </div>
 
