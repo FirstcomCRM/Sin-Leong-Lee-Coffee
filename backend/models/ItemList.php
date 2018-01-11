@@ -32,6 +32,7 @@ class ItemList extends \yii\db\ActiveRecord
         return [
             [['item', 'item_name', 'asset', 'income', 'exp_cos'], 'required'],
             [['item'], 'string', 'max' => 20],
+            [['inventory_id'],'integer'],
             [['item_name'], 'string', 'max' => 50],
             [['asset', 'income', 'exp_cos'], 'string', 'max' => 15],
         ];
@@ -49,6 +50,7 @@ class ItemList extends \yii\db\ActiveRecord
             'asset' => 'Asset',
             'income' => 'Income',
             'exp_cos' => 'Exp Cos',
+            'inventory_id'=>'Inventory',
         ];
     }
 }

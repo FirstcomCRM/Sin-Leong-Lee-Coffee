@@ -18,7 +18,7 @@ class ItemListSearch extends ItemList
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id','inventory_id'], 'integer'],
             [['item', 'item_name', 'asset', 'income', 'exp_cos'], 'safe'],
         ];
     }
