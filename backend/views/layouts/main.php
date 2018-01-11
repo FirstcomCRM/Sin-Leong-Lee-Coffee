@@ -147,6 +147,7 @@ DashboardAsset::register($this);
             <li><a href="<?php echo Url::to(['account-list/index']);?>"><i class="fa fa-circle-o"></i> Account List</a></li>
             <li><a href="<?php echo Url::to(['item-list/index']);?>"><i class="fa fa-circle-o"></i> Item List</a></li>
             <li><a href="<?php echo Url::to(['asset-type/index']);?>"><i class="fa fa-circle-o"></i> Asset List</a></li>
+            <li><a href="<?php echo Url::to(['inventory-group/index']);?>"><i class="fa fa-circle-o"></i> Inventory Group</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -164,6 +165,18 @@ DashboardAsset::register($this);
         </li>
         <li class="treeview">
           <a href="#">
+            <i class="fa fa fa-cog" aria-hidden="true"></i>
+            <span>Setup</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="<?php echo Url::to(['setup/index']);?>"><i class="fa fa-circle-o"></i>Up/Down</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
             <i class="fa fa-money" aria-hidden="true"></i>
             <span>Expenses</span>
             <span class="pull-right-container">
@@ -173,6 +186,9 @@ DashboardAsset::register($this);
           <ul class="treeview-menu">
             <li><a href="<?php echo Url::to(['direct-expense/index']);?>"><i class="fa fa-circle-o"></i>Direct Expenses</a></li>
           </ul>
+        </li>
+        <li class="treeview">
+            <li><a href="<?php echo Url::to(['boiler/index']);?>"><i class="fa fa-thermometer-empty"></i>Boiler</a></li>
         </li>
         <!-- <li>
           <a href="pages/widgets.html">
@@ -205,7 +221,7 @@ DashboardAsset::register($this);
             <li><a href="<?php echo Url::to(['invoice-quantity/index']);?>"><i class="fa fa-circle-o"></i> Monthly Average Report</a></li>
             <li><a href="<?php echo Url::to(['invoice-performance/index']);?>"><i class="fa fa-circle-o"></i> Customer Performance</a></li>
             <li><a href="<?php echo Url::to(['customer/index']);?>"><i class="fa fa-circle-o"></i> Customer</a></li>
-            <li><a href="<?php echo Url::to(['boiler/index']);?>"><i class="fa fa-circle-o"></i> Boiler</a></li>
+            
             <!---<li><a href="<?php echo Url::to(['gii/default']);?>"><i class="fa fa-cog" aria-hidden="true"></i></i> Gii</a></li>--->
           </ul>
         </li>
