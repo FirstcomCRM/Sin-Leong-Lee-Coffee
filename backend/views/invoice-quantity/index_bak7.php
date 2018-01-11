@@ -31,28 +31,16 @@ $month_total = 0;
 $previous_total = 0;
 $trigger = 'close';
 
-$test = -4;
 ?>
 <style>
 .select2-selection__rendered{
   line-height: 200%;
 }
 
-.color-red{
-  color:red;
-  font-weight: bold;
-  text-decoration: underline;
-  font-size: 16px;
-}
-.color-green{
-  color: green;
-  font-weight: bold;
-  text-decoration: underline;
-  font-size: 16px;
-}
 </style>
 
 
+<?php echo $date_from ?>
 
 <div class="invoice-quantity-index">
   <div class="box box-info">
@@ -126,41 +114,19 @@ $test = -4;
                             <?php $month_total =  InvoicePerformance::find()->where(['item_code'=>$value_a['item_code'],'item_name'=>$value_a['item_name'], 'customer_name'=>$value['customer_name'] ])
                                             ->andFilterWhere(['between','date',$date_start,$date_end])
                                             ->sum('quantity'); ?>
-                            <?php if (empty($month_total)): ?>
-                              <?php $month_total = 0 ?>
-                            <?php endif; ?>
+
                             <td>
-                              <?php if ($trigger == 'open'): ?>
-                                <?php if (!is_null($month_total)): ?>
-                                  <?php $change = $previous_total-$month_total ?>
-                                    <?php if ($change<0): ?>
-                                      <!--green--->
-                                      <?php if (abs($change)>=$up ): ?>
-                                        <span class="color-green"><?php echo $month_total ?></span>
-                                      <?php else: ?>
-                                        <?php echo $month_total ?>
-                                      <?php endif; ?>
-                                    <?php else: ?>
-                                      <!--red--->
-                                        <?php if (abs($change)>=$down): ?>
-                                            <span class="color-red"><?php echo $month_total ?></span>
-                                        <?php else: ?>
-                                          <?php echo $month_total ?>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                  <?php echo $month_total = 0 ?>
-                                <?php endif; ?>
-                              <?php else: ?>
-                                <?php if (!empty($month_total)): ?>
-                                  <?php echo $month_total ?>
-                                <?php else: ?>
-                                  <?php echo $month_total = 0 ?>
-                                <?php endif; ?>
-                              <?php endif; ?>
+                              <?php if (!empty($month_total)) {
+                                  echo $month_total;
+                                  //  echo $month_total.'-'.$previous_total;
+                              }else{
+                                  //$previous_total = 0;
+                                  echo $month_total = 0;
+                                    //echo 0;
+                                    //echo '0'.'-'.$previous_total;
+                              }?>
 
                             </td>
-                            <?php $trigger = 'open'; ?>
                             <?php $previous_total = $month_total  ?>
                           <?php endforeach; ?>
 
@@ -181,7 +147,6 @@ $test = -4;
                       </tr>
 
                     <?php $number += 1 ?>
-                    <?php $trigger = 'close'; ?>
                       <?php $previous_total = 0  ?>
                     <?php endforeach; ?>
 
@@ -198,9 +163,3 @@ $test = -4;
     </div>
   </div>
 </div>
-
-
-
-<?php if (is_null($month_total)): ?>
-  tes
-<?php endif; ?>
