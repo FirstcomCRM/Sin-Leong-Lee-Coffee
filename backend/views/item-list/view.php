@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'asset',
                 'income',
                 'exp_cos',
+                'inventory_id',
             ],
         ]) ?>
       </div>
