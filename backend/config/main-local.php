@@ -21,5 +21,4 @@ if (!YII_ENV_TEST) {
         'class' => 'yii\gii\Module',
     ];
 }
-
 return $config;
