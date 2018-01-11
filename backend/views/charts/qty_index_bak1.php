@@ -12,8 +12,6 @@ $date_from = date('Y-m-01', strtotime($ym_from));
 $date_to = date('Y-m-t', strtotime($ym_to));
 $labels = [];
 $quantity = [];
-$dataset = [];
-$colors = [];
 
 function set_rgb(){
   $r = rand(1,255);
@@ -40,10 +38,17 @@ function set_rgb(){
         ->andWhere(['customer_name'=>$value])
         ->sum('quantity'); ?>
     <?php $quantity[] = $qty ?>
-    <?php $colors[]=set_rgb() ?>
-
   <?php endforeach; ?>
 <?php endif; ?>
+
+
+<?php
+
+  $dataset = [
+    'label'=>$labels,
+    'dataset'=>['data'=>$quantity]
+  ]
+ ?>
 
 <?php if (!empty($searchModel->customer_name)): ?>
 
@@ -62,14 +67,14 @@ function set_rgb(){
               'labels' => $labels,
               'datasets' => [
                   [
-                      'backgroundColor'=>$colors,
-                      'data' =>$quantity,
+                      'backgroundColor'=>set_rgb(),
+                      'data' => $quantity,
                       'label'=>'Quantity',
                   ],
-
               ]
 
           ]
+
       ]);
       ?>
       </div>
