@@ -11,6 +11,14 @@ use backend\models\AssetType;
 /* @var $form yii\widgets\ActiveForm */
 
 
+function custom_sort( $array )
+{
+  // Sort it
+  asort($array);
+  // return sorted array
+  return $array;
+}
+
 $data = (int)date('Y');
 for ($i=$data; $i >=2010 ; $i--) {
   $year_a[] = $i;
@@ -27,9 +35,17 @@ $date_to = [
 
 $date_from = [
   $model_sum->date_from=>$model_sum->date_from,
-]
+];
 
+$sin = [
+  'Sin Leong Lee'=>'Sin Leong Lee',
+];
+$customer = array_merge($customer, $sin);
+$customer = custom_sort($customer);
+
+//$customer[] = 'Sin Leeong Lee'=>'Sin Leeong Lee';
 ?>
+
 
 <style>
 .field-asset-type{
@@ -37,6 +53,7 @@ $date_from = [
 }/*Note, asset type hide it for now since Asset type rendered dumb and useless*/
 
 </style>
+
 
 <div class="boiler-form"> <!--Start of Boiler Form-->
     <?php $form = ActiveForm::begin(); ?>
@@ -93,7 +110,7 @@ $date_from = [
               <?= $form->field($model_sum, 'purchase_cost')->textInput(['maxlength' => true, 'id'=>'purchase-cost']) ?>
           </div>
           <div class="col-md-3">
-              <?= $form->field($model_sum, 'bolter_no')->textInput(['maxlength' => true]) ?>
+              <?= $form->field($model_sum, 'bolter_no')->textInput(['maxlength' => true])->label('Boiler No') ?>
           </div>
           <div class="col-md-3">
               <?= $form->field($model_sum, 'invoice_no')->textInput(['maxlength' => true]) ?>
@@ -106,7 +123,8 @@ $date_from = [
         <div class="row">
           <div class="col-md-4">
               <?= $form->field($model_sum, 'total_dep_amount')->textInput(['maxlength' => true, 'id'=>'total_dep_amount']) ?>
-              <?= $form->field($model_sum, 'balance')->textInput(['maxlength' => true, 'id'=>'balance']) ?>
+
+              <?php $form->field($model_sum, 'balance')->textInput(['maxlength' => true, 'id'=>'balance']) ?>
           </div>
         </div>
 
@@ -122,7 +140,7 @@ $date_from = [
           <thead>
             <th>Date</th>
             <th>Depreciation Amount</th>
-            <th>Depreciation Expense</th>
+            <th>Net Book Value</th>
           </thead>
             <tbody>
               <?php if (!($model->isNewRecord)): ?>
