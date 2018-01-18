@@ -221,7 +221,8 @@ DashboardAsset::register($this);
             <li><a href="<?php echo Url::to(['invoice-quantity/index']);?>"><i class="fa fa-circle-o"></i> Monthly Average Report</a></li>
             <li><a href="<?php echo Url::to(['invoice-performance/index']);?>"><i class="fa fa-circle-o"></i> Customer Performance</a></li>
             <li><a href="<?php echo Url::to(['customer/index']);?>"><i class="fa fa-circle-o"></i> Customer</a></li>
-            
+            <li><a href="<?php echo Url::to(['expense-report/index']);?>"><i class="fa fa-circle-o"></i> Expense Reports</a></li>
+
             <!---<li><a href="<?php echo Url::to(['gii/default']);?>"><i class="fa fa-cog" aria-hidden="true"></i></i> Gii</a></li>--->
           </ul>
         </li>
