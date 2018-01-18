@@ -3,7 +3,8 @@
 namespace backend\models;
 
 use Yii;
-
+use backend\models\ExpensesReport;
+use yii\data\ActiveDataProvider;
 /**
  * This is the model class for table "expenses_report".
  *
@@ -24,6 +25,12 @@ class ExpensesReport extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+     public $year_to;
+     public $month_to;
+     public $year_from;
+     public $month_from;
+     public $customer;
+
     public static function tableName()
     {
         return 'expenses_report';
@@ -37,6 +44,7 @@ class ExpensesReport extends \yii\db\ActiveRecord
         return [
             [['expenses_id'], 'required'],
             [['expenses_id'], 'integer'],
+            [['year_to','month_to','year_from','month_from',],'safe'],
             [['id_no', 'scr', 'date', 'memo', 'debit', 'credit', 'job_no', 'net_activity', 'ending_balance'], 'string', 'max' => 255],
         ];
     }
@@ -59,5 +67,24 @@ class ExpensesReport extends \yii\db\ActiveRecord
             'ending_balance' => 'Ending Balance',
             'expenses_id' => 'Expenses ID',
         ];
+    }
+
+    public function perform_list($params){
+      $query = ExpensesReport::find();
+
+      $dataProvider = new ActiveDataProvider([
+          'query' => $query,
+      ]);
+
+       $this->load($params);
+
+       $ym_from = $this->month_from.'-'.$this->year_from;
+       $ym_to = $this->month_to.'-'.$this->year_to;
+       $date_from = date('Y-m-01', strtotime($ym_from));
+       $date_to = date('Y-m-t', strtotime($ym_to));
+
+       $query->andFilterWhere(['between','date_uploaded',$date_from,$date_to]);
+
+       return $dataProvider;
     }
 }
