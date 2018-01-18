@@ -85,7 +85,7 @@ $customer = custom_sort($customer);
             ]); ?>
           </div><!--customer name-->
           <div class="col-md-3"><!--Purchase Date-->
-              <?= $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
+              <?php $form->field($model, 'amount')->textInput(['maxlength' => true]) ?>
           </div><!--Purchase Date-->
           <div class="col-md-3"><!--Amount-->
 
